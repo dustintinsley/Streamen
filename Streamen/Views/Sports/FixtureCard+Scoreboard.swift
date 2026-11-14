@@ -206,8 +206,12 @@ extension FixtureCard {
         Button {
             onWatch(channel)
         } label: {
+            // One line always: a narrow centre column (a soccer clock like
+            // "52'") must not break the label into "Watc / h".
             Label("Watch", systemImage: "play.fill")
                 .font(.caption2.weight(.bold))
+                .lineLimit(1)
+                .fixedSize()
                 .padding(.horizontal, 10)
                 .padding(.vertical, 5)
                 .background(.white.opacity(0.2), in: Capsule())

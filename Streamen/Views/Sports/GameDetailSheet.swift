@@ -25,7 +25,7 @@ struct GameDetailSheet: View {
     /// The channel just watched, marked when closing the player reopens this
     /// game (or, on macOS, while its player window is open).
     var lastWatchedChannelID: String?
-    var provider: any SportsDataProvider = ESPNClient.shared
+    var provider: any SportsDataProvider = SportsProviders.current
 
     @Environment(\.dismiss) private var dismiss
     @Environment(\.modelContext) private var modelContext

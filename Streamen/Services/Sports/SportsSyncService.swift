@@ -139,7 +139,7 @@ final class SportsSyncService {
     /// Wires the data source and the follow service. Warms the store from disk
     /// so the hub renders before the first network refresh.
     func configure(
-        provider: any SportsDataProvider = ESPNClient.shared,
+        provider: any SportsDataProvider = SportsProviders.current,
         followSource: (any SportsFollowSource)? = nil
     ) {
         self.provider = provider

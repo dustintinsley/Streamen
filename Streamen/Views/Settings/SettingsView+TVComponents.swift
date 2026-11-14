@@ -121,6 +121,11 @@ import SwiftUI
         @AppStorage(SportsSyncService.hideScoresKey) private var hideScores = false
         @State private var sync = SportsSyncService.shared
         @State private var showManageTeams = false
+        #if DEBUG
+            @Query private var playlists: [Playlist]
+            @State private var demoOn = SportsScreenshotDemo.isEnabled
+            @State private var demoMessage: String?
+        #endif
 
         var body: some View {
             VStack(alignment: .leading, spacing: 36) {
@@ -166,11 +171,44 @@ import SwiftUI
                     .font(.system(size: 20))
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, TVSettingsMetrics.rowHPadding)
+
+                #if DEBUG
+                    screenshotDemoRow
+                #endif
             }
             .fullScreenCover(isPresented: $showManageTeams) {
                 TVManageTeamsPane()
             }
         }
+
+        #if DEBUG
+            /// Debug builds only, so its text stays out of the string catalog.
+            private var screenshotDemoRow: some View {
+                VStack(alignment: .leading, spacing: 8) {
+                    Button {
+                        let on = !demoOn
+                        Task {
+                            demoMessage = await SportsScreenshotDemo.setEnabled(on, playlists: playlists)
+                            demoOn = SportsScreenshotDemo.isEnabled
+                        }
+                    } label: {
+                        HStack(spacing: 16) {
+                            Text(verbatim: "Screenshot Demo")
+                            Spacer(minLength: 0)
+                            Text(verbatim: demoOn ? "On" : "Off")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .buttonStyle(TVSettingsRowButtonStyle())
+
+                    Text(verbatim: demoMessage
+                        ?? "Debug: shows made-up leagues and teams from the Screenshot Demo server instead of ESPN.")
+                        .font(.system(size: 20))
+                        .foregroundStyle(.secondary)
+                        .padding(.horizontal, TVSettingsMetrics.rowHPadding)
+                }
+            }
+        #endif
 
         /// A relative "last refreshed" line, or "Never" before the first refresh.
         private var lastRefreshText: String {

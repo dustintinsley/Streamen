@@ -19,15 +19,16 @@ nonisolated enum SportsCatalog {
     )
 
     static func league(id: String) -> SportsLeague? {
-        leaguesByID[id]
+        leaguesByID[id] ?? SportsScreenshotDemo.leagues.first { $0.id == id }
     }
 
     static func league(sport: String, slug: String) -> SportsLeague? {
-        leaguesByID[SportsLeague.makeID(sport: sport, slug: slug)]
+        league(id: SportsLeague.makeID(sport: sport, slug: slug))
     }
 
+    /// The region's leagues; the screenshot demo's (Debug builds) lead while it's on.
     static func leagues(in region: SportsRegion) -> [SportsLeague] {
-        leagues.filter { $0.region == region }
+        (SportsScreenshotDemo.leagues + leagues).filter { $0.region == region }
     }
 
     // MARK: - Browse order

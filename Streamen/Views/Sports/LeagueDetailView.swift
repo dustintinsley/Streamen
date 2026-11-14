@@ -22,7 +22,7 @@ import SwiftUI
 
 struct LeagueDetailView: View {
     let league: SportsLeague
-    var provider: any SportsDataProvider = ESPNClient.shared
+    var provider: any SportsDataProvider = SportsProviders.current
 
     @Environment(\.modelContext) private var modelContext
     @Environment(\.contentRestriction) private var restriction

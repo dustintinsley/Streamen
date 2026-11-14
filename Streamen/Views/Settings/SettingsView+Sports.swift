@@ -8,6 +8,7 @@
 //  (SettingsView+TVComponents), so this page is iOS / macOS / visionOS only.
 //
 
+import SwiftData
 import SwiftUI
 
 #if !os(tvOS)
@@ -16,12 +17,20 @@ import SwiftUI
         @AppStorage(SportsSyncService.hideScoresKey) private var hideScores = false
         @State private var sync = SportsSyncService.shared
         @State private var showingManageTeams = false
+        #if DEBUG
+            @Query private var playlists: [Playlist]
+            @State private var demoOn = SportsScreenshotDemo.isEnabled
+            @State private var demoMessage: String?
+        #endif
 
         var body: some View {
             Form {
                 teamsSection
                 scoresSection
                 refreshSection
+                #if DEBUG
+                    screenshotDemoSection
+                #endif
             }
             #if os(macOS)
             .formStyle(.grouped)
@@ -80,6 +89,28 @@ import SwiftUI
                 }
             }
         }
+
+        #if DEBUG
+            /// Debug builds only, so its text stays out of the string catalog.
+            private var screenshotDemoSection: some View {
+                Section {
+                    Toggle(isOn: Binding(get: { demoOn }, set: { on in
+                        demoOn = on
+                        Task {
+                            demoMessage = await SportsScreenshotDemo.setEnabled(on, playlists: playlists)
+                            demoOn = SportsScreenshotDemo.isEnabled
+                        }
+                    })) {
+                        Text(verbatim: "Screenshot Demo")
+                    }
+                } header: {
+                    Text(verbatim: "Debug")
+                } footer: {
+                    Text(verbatim: demoMessage
+                        ?? "Shows made-up leagues and teams from the Screenshot Demo server instead of ESPN. Your follows come back when it's off.")
+                }
+            }
+        #endif
 
         private var lastRefreshText: String {
             guard let last = sync.lastRefresh else {

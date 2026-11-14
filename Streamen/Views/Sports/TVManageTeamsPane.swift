@@ -192,7 +192,7 @@
     private struct TVLeagueTeamsPane: View {
         let league: SportsLeague
         let onBack: () -> Void
-        var provider: any SportsDataProvider = ESPNClient.shared
+        var provider: any SportsDataProvider = SportsProviders.current
 
         @State private var store = SportsStore.shared
         @State private var follows = SportsFollowService.shared

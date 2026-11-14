@@ -17131,61 +17131,60 @@
         }
       }
     },
-    "DEBUG only. Force Premium previews the free tier and paywall. Recalculate rebuilds the For You row now, bypassing the once-a-day throttle.": {
-      "extractionState": "stale",
+    "DEBUG only. Force Pro previews the free tier and paywall. Recalculate rebuilds the For You row now, bypassing the once-a-day throttle.": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "DEBUG فقط. «فرض المميّز» يعرض معاينة للفئة المجانية وشاشة الاشتراك. «إعادة الحساب» يعيد إنشاء صف «لك» الآن متجاوزًا حد المرة الواحدة يوميًا."
+            "value": "DEBUG فقط. «فرض Pro» يعرض معاينة للفئة المجانية وشاشة الاشتراك. «إعادة الحساب» يعيد إنشاء صف «لك» الآن متجاوزًا حد المرة الواحدة يوميًا."
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Nur DEBUG. „Premium erzwingen“ zeigt die kostenlose Stufe und das Paywall-Fenster. „Neu berechnen“ baut die „Für dich“-Reihe sofort neu auf und umgeht das Tageslimit."
+            "value": "Nur DEBUG. „Pro erzwingen“ zeigt die kostenlose Stufe und das Paywall-Fenster. „Neu berechnen“ baut die „Für dich“-Reihe sofort neu auf und umgeht das Tageslimit."
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Solo DEBUG. «Forzar Premium» previsualiza el plan gratuito y el muro de pago. «Recalcular» reconstruye ahora la fila Para ti, omitiendo el límite de una vez al día."
+            "value": "Solo DEBUG. «Forzar Pro» previsualiza el plan gratuito y el muro de pago. «Recalcular» reconstruye ahora la fila Para ti, omitiendo el límite de una vez al día."
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "DEBUG uniquement. « Forcer Premium » prévisualise la formule gratuite et l’écran d’abonnement. « Recalculer » reconstruit la rangée Pour vous immédiatement, en contournant la limite d’une fois par jour."
+            "value": "DEBUG uniquement. « Forcer Pro » prévisualise la formule gratuite et l’écran d’abonnement. « Recalculer » reconstruit la rangée Pour vous immédiatement, en contournant la limite d’une fois par jour."
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Solo DEBUG. \"Forza Premium\" mostra un'anteprima del piano gratuito e del paywall. \"Ricalcola\" ricostruisce subito la riga Per te, ignorando il limite giornaliero."
+            "value": "Solo DEBUG. \"Forza Pro\" mostra un'anteprima del piano gratuito e del paywall. \"Ricalcola\" ricostruisce subito la riga Per te, ignorando il limite giornaliero."
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "デバッグ専用。「Premiumを強制」は無料プランとペイウォールをプレビューします。「再計算」は1日1回の制限を回避して、今すぐ「For You」の行を再構築します。"
+            "value": "デバッグ専用。「Proを強制」は無料プランとペイウォールをプレビューします。「再計算」は1日1回の制限を回避して、今すぐ「For You」の行を再構築します。"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "디버그 전용. 프리미엄 강제는 무료 등급과 결제 화면을 미리 봅니다. 다시 계산은 하루 한 번 제한을 무시하고 지금 추천 항목 행을 다시 만듭니다."
+            "value": "디버그 전용. Pro 강제는 무료 등급과 결제 화면을 미리 봅니다. 다시 계산은 하루 한 번 제한을 무시하고 지금 추천 항목 행을 다시 만듭니다."
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Apenas DEBUG. Forçar Premium pré-visualiza o nível gratuito e o paywall. Recalcular reconstrói a linha Para Você agora, ignorando o limite de uma vez por dia."
+            "value": "Apenas DEBUG. Forçar Pro pré-visualiza o nível gratuito e o paywall. Recalcular reconstrói a linha Para Você agora, ignorando o limite de uma vez por dia."
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "仅限调试。“强制高级版”可预览免费版和付费墙。“重新计算”会立即重建“为你推荐”栏，绕过每天一次的限制。"
+            "value": "仅限调试。“强制 Pro”可预览免费版和付费墙。“重新计算”会立即重建“为你推荐”栏，绕过每天一次的限制。"
           }
         }
       }
@@ -27863,61 +27862,60 @@
         }
       }
     },
-    "Force Premium": {
-      "extractionState": "stale",
+    "Force Pro": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "فرض المميّز"
+            "value": "فرض Pro"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Premium erzwingen"
+            "value": "Pro erzwingen"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Forzar Premium"
+            "value": "Forzar Pro"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Forcer Premium"
+            "value": "Forcer Pro"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Forza Premium"
+            "value": "Forza Pro"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Premiumを強制"
+            "value": "Proを強制"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "프리미엄 강제"
+            "value": "Pro 강제"
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Forçar Premium"
+            "value": "Forçar Pro"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "强制高级版"
+            "value": "强制 Pro"
           }
         }
       }
@@ -51515,64 +51513,6 @@
         }
       }
     },
-    "Premium Features": {
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الميزات المميّزة"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Premium-Funktionen"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Funciones Premium"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Fonctionnalités Premium"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Funzioni Premium"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Premium機能"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "프리미엄 기능"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Recursos Premium"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "高级版功能"
-          }
-        }
-      }
-    },
     "Prepare Report": {
       "localizations": {
         "ar": {
@@ -52343,6 +52283,64 @@
           "stringUnit": {
             "state": "translated",
             "value": "Pro"
+          }
+        }
+      }
+    },
+    "Pro Features": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "ميزات Pro"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro-Funktionen"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Funciones Pro"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Fonctionnalités Pro"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Funzioni Pro"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro機能"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro 기능"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Recursos Pro"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pro 功能"
           }
         }
       }
@@ -69703,65 +69701,6 @@
         }
       }
     },
-    "Streamen is free and open source. Premium supports development and unlocks a few extra conveniences.": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Streamen مجاني ومفتوح المصدر. يدعم الاشتراك المميّز التطوير ويفتح بعض الميزات الإضافية المريحة."
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Streamen ist kostenlos und quelloffen. Premium unterstützt die Entwicklung und schaltet einige zusätzliche Annehmlichkeiten frei."
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Streamen es gratuito y de código abierto. Premium financia el desarrollo y desbloquea algunas comodidades adicionales."
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Streamen est gratuit et open source. Premium soutient le développement et débloque quelques commodités supplémentaires."
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Streamen è gratuito e open source. Premium sostiene lo sviluppo e sblocca alcune comodità extra."
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Streamenは無料のオープンソースです。Premiumは開発を支援し、いくつかの便利な機能をアンロックします。"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Streamen는 무료 오픈 소스입니다. 프리미엄은 개발을 지원하고 몇 가지 추가 편의 기능을 잠금 해제합니다."
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "O Streamen é gratuito e de código aberto. O Premium apoia o desenvolvimento e desbloqueia algumas conveniências extras."
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Streamen是免费开源的。高级版支持开发并解锁一些额外的便利功能。"
-          }
-        }
-      }
-    },
     "Streamen is free and open source. Pro supports development and unlocks a few extra conveniences.": {
       "comment": "A description of Streamen Pro.",
       "isCommentAutoGenerated": true,
@@ -83106,65 +83045,6 @@
         }
       }
     },
-    "Unlock with Premium": {
-      "extractionState": "stale",
-      "localizations": {
-        "ar": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "الفتح مع مميّز"
-          }
-        },
-        "de": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Mit Premium freischalten"
-          }
-        },
-        "es": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desbloquear con Premium"
-          }
-        },
-        "fr": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Débloquer avec Premium"
-          }
-        },
-        "it": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Sblocca con Premium"
-          }
-        },
-        "ja": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Premiumでアンロック"
-          }
-        },
-        "ko": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "프리미엄으로 잠금 해제"
-          }
-        },
-        "pt": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "Desbloquear com o Premium"
-          }
-        },
-        "zh-Hans": {
-          "stringUnit": {
-            "state": "translated",
-            "value": "通过高级版解锁"
-          }
-        }
-      }
-    },
     "Unmute": {
       "comment": "macOS player: speaker button in the bottom control bar that restores sound after muting; also its tooltip.",
       "extractionState": "manual",
@@ -83774,60 +83654,60 @@
     },
     "Updating the TV guide": {},
     "Updating the TV guide…": {},
-    "Upgrade to Premium": {
+    "Upgrade to Pro": {
       "localizations": {
         "ar": {
           "stringUnit": {
             "state": "translated",
-            "value": "الترقية إلى مميّز"
+            "value": "الترقية إلى Pro"
           }
         },
         "de": {
           "stringUnit": {
             "state": "translated",
-            "value": "Upgrade auf Premium"
+            "value": "Upgrade auf Pro"
           }
         },
         "es": {
           "stringUnit": {
             "state": "translated",
-            "value": "Pasar a Premium"
+            "value": "Pasar a Pro"
           }
         },
         "fr": {
           "stringUnit": {
             "state": "translated",
-            "value": "Passer à Premium"
+            "value": "Passer à Pro"
           }
         },
         "it": {
           "stringUnit": {
             "state": "translated",
-            "value": "Passa a Premium"
+            "value": "Passa a Pro"
           }
         },
         "ja": {
           "stringUnit": {
             "state": "translated",
-            "value": "Premiumにアップグレード"
+            "value": "Proにアップグレード"
           }
         },
         "ko": {
           "stringUnit": {
             "state": "translated",
-            "value": "프리미엄으로 업그레이드"
+            "value": "Pro로 업그레이드"
           }
         },
         "pt": {
           "stringUnit": {
             "state": "translated",
-            "value": "Atualizar para o Premium"
+            "value": "Atualizar para o Pro"
           }
         },
         "zh-Hans": {
           "stringUnit": {
             "state": "translated",
-            "value": "升级到高级版"
+            "value": "升级到 Pro"
           }
         }
       }

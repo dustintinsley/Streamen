@@ -65,9 +65,11 @@ extension [Playlist] {
     /// land on the same playlist.
     ///
     /// The stored selection itself is left alone, so renewing Pro lands the
-    /// viewer back on the playlist they had picked.
+    /// viewer back on the playlist they had picked, and re-enabling a disabled
+    /// playlist lands them back on it.
     func active(for storedID: String, isPremium: Bool? = nil) -> Playlist? {
-        unlocked(isPremium: isPremium).first { $0.id.uuidString == storedID } ?? oldest
+        let usable = unlocked(isPremium: isPremium)
+        return usable.first { $0.id.uuidString == storedID } ?? usable.oldest
     }
 
     /// The playlist added first — the free plan's one playlist, and the
@@ -94,15 +96,28 @@ extension [Playlist] {
         owner(ofContentID: contentID).map { isLocked($0, isPremium: isPremium) } ?? false
     }
 
-    /// The playlists the plan can use: all of them with Pro, else the oldest.
+    /// The playlists the plan can use and the viewer has left enabled: all of
+    /// them with Pro, else the oldest. Disabling the oldest doesn't hand the
+    /// free plan another playlist in its place.
     func unlocked(isPremium: Bool? = nil) -> [Playlist] {
         unlocked(premium: PremiumManager.isPremium(isPremium))
+    }
+
+    /// Whether `playlist` can't be switched off: turning it off would leave the
+    /// app nothing to show, because no other playlist is both enabled and usable
+    /// on the plan. On the free plan that keeps the oldest (its one playlist)
+    /// on; locked ones can still go off.
+    func mustStayEnabled(_ playlist: Playlist, isPremium: Bool? = nil) -> Bool {
+        playlist.isEnabled
+            && !isLocked(playlist, isPremium: isPremium)
+            && !unlocked(isPremium: isPremium).contains { $0.id != playlist.id }
     }
 
     /// `unlocked(isPremium:)` with the plan already read, for callers off the
     /// main actor.
     nonisolated func unlocked(premium: Bool) -> [Playlist] {
-        premium ? self : (oldest.map { [$0] } ?? [])
+        let usable = premium ? self : (oldest.map { [$0] } ?? [])
+        return usable.filter(\.isEnabled)
     }
 
     /// The playlist that synced a piece of content. Every catalog id is
@@ -133,8 +148,16 @@ extension [Playlist] {
             }
     }
 
+    /// The Combined members the viewer has left enabled, in priority order —
+    /// the ones the Combined selection actually merges. Settings › Combined View
+    /// still lists every member so a disabled one keeps its place.
+    var enabledCombinedMembers: [Playlist] {
+        combinedMembers.filter(\.isEnabled)
+    }
+
     /// Resolves the stored selection (the raw `PlaylistSelectionStore.key`
-    /// value) to the scope every browse surface reads from.
+    /// value) to the scope every browse surface reads from. Disabled playlists
+    /// never resolve.
     ///
     /// `PlaylistSelectionStore.combined` resolves to the members only for a Pro
     /// user with at least two of them. Otherwise it falls back on every read:
@@ -147,7 +170,7 @@ extension [Playlist] {
         guard stored == PlaylistSelectionStore.combined else {
             return active(for: stored, isPremium: isPremium).map { .isolated($0.id) } ?? .empty
         }
-        let members = combinedMembers
+        let members = enabledCombinedMembers
         if isPremium, members.count >= 2 {
             return .combined(members.map { (id: $0.id, tabs: $0.combinedTabs) })
         }
@@ -226,7 +249,9 @@ enum QuickSwitchResolver {
         let isPremium = PremiumManager.isPremium(isPremium)
         let inScope = Set(scope.playlistIDs)
         let currentID = scope.isCombined ? nil : scope.primaryID
-        return playlists.map { playlist in
+        // A disabled playlist isn't offered at all; the plan lock still counts
+        // every playlist, so disabling one never unlocks another.
+        return playlists.filter(\.isEnabled).map { playlist in
             QuickSwitchRow(
                 item: playlist,
                 isCurrent: playlist.id == currentID,
@@ -248,7 +273,7 @@ enum QuickSwitchResolver {
             rows: playlistRows(playlists, scope: scope, isPremium: isPremium),
             isCombinedCurrent: scope.isCombined,
             combinedAction: combinedAction(playlists, scope: scope, isPremium: isPremium),
-            combinedMemberNames: playlists.combinedMembers.map(\.name)
+            combinedMemberNames: playlists.enabledCombinedMembers.map(\.name)
         )
     }
 
@@ -256,7 +281,7 @@ enum QuickSwitchResolver {
     /// with two or more members actually switches to it.
     static func combinedAction(_ playlists: [Playlist], scope: CatalogScope, isPremium: Bool) -> CombinedSwitchAction {
         guard isPremium else { return .paywall }
-        guard playlists.combinedMembers.count >= 2 else { return .configure }
+        guard playlists.enabledCombinedMembers.count >= 2 else { return .configure }
         return scope.isCombined ? .alreadyCurrent : .switchToCombined
     }
 

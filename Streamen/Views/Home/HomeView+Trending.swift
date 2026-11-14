@@ -40,7 +40,10 @@ extension HomeView {
             let (movieItems, seriesItems, heroes) = matchTrending(movies: movies, tvSeries: tvSeries)
             trendingMovies = Array(movieItems.prefix(20))
             trendingSeries = Array(seriesItems.prefix(20))
-            heroItems = Array(heroes.prefix(8))
+            // Nothing on hand is trending (a small or regional library, or a
+            // provider without TMDB ids on its trending titles): feature the
+            // newest titles TMDB knows instead of leaving Home without a hero.
+            heroItems = Array((heroes.isEmpty ? recentHeroes() : heroes).prefix(8))
             trendingState = .loaded
             HomeTrendingCache.shared.storeTrending(
                 key: cacheKey, heroes: heroItems, movies: trendingMovies, series: trendingSeries
@@ -90,6 +93,42 @@ extension HomeView {
             }
         }
         return (movieItems, seriesItems, heroes)
+    }
+
+    /// The newest in-scope movies and series that carry a TMDB id, interleaved,
+    /// for a hero carousel with no trending matches. Their backdrops and logos
+    /// may not be fetched yet: `enrichHeroLogos` fetches them, and the hero
+    /// reads the title's own backdrop once it lands (`HeroItem.imageURL`).
+    private func recentHeroes() -> [HeroItem] {
+        let scope = scopeMatcher
+        var movieQuery = FetchDescriptor<Movie>(
+            predicate: #Predicate { $0.tmdbId != nil },
+            sortBy: [SortDescriptor(\.added, order: .reverse)]
+        )
+        movieQuery.fetchLimit = 500
+        var seriesQuery = FetchDescriptor<Series>(
+            predicate: #Predicate { $0.tmdbId != nil },
+            sortBy: [SortDescriptor(\.lastModified, order: .reverse)]
+        )
+        seriesQuery.fetchLimit = 500
+        var seen = Set<Int>()
+        let movies: [HeroItem] = ((try? modelContext.fetch(movieQuery)) ?? [])
+            .filter { scope.contains($0.id, .movies) && !restriction.hides(categoryID: $0.categoryId) }
+            .filter { seen.insert($0.tmdbId ?? 0).inserted }
+            .prefix(8)
+            .map { .movie($0, backdropURL: nil, overview: $0.plot ?? "") }
+        seen.removeAll()
+        let series: [HeroItem] = ((try? modelContext.fetch(seriesQuery)) ?? [])
+            .filter { scope.contains($0.id, .series) && !restriction.hides(categoryID: $0.categoryId) }
+            .filter { seen.insert($0.tmdbId ?? 0).inserted }
+            .prefix(8)
+            .map { .series($0, backdropURL: nil, overview: $0.plot ?? "") }
+        var heroes: [HeroItem] = []
+        for index in 0 ..< max(movies.count, series.count) {
+            if index < movies.count { heroes.append(movies[index]) }
+            if index < series.count { heroes.append(series[index]) }
+        }
+        return heroes
     }
 
     /// The TMDB trending feed carries no logo artwork, so a hero title shows

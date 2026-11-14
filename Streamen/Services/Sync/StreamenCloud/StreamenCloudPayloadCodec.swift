@@ -293,6 +293,7 @@ nonisolated extension SyncedPlaylist: StreamenCloudPayloadMappable {
             "sourceTypeRaw": .string(sourceTypeRaw),
             "epgURL": Codec.wire(epgURL),
             "syncEnabled": .bool(syncEnabled),
+            "isEnabled": .bool(isEnabled),
             "hiddenTabsRaw": .string(hiddenTabsRaw),
             "combinedTypesRaw": .string(combinedTypesRaw),
             "combinedPriority": Codec.wire(combinedPriority),
@@ -301,7 +302,7 @@ nonisolated extension SyncedPlaylist: StreamenCloudPayloadMappable {
     }
 
     static var streamenCloudOmittedDefaults: [String: JSONValue] {
-        ["combinedTypesRaw": .string(""), "combinedPriority": .null]
+        ["combinedTypesRaw": .string(""), "combinedPriority": .null, "isEnabled": .bool(true)]
     }
 
     static func streamenCloudKey(for fields: StreamenCloudPayloadCodec.Fields) throws -> String {
@@ -327,6 +328,8 @@ nonisolated extension SyncedPlaylist: StreamenCloudPayloadMappable {
         let combinedRank = try fields.contains("combinedPriority")
             ? fields.optionalInt("combinedPriority")
             : combinedPriority
+        // Likewise a payload without `isEnabled` predates the Enabled switch.
+        let enabled = try fields.contains("isEnabled") ? fields.bool("isEnabled") : isEnabled
         let updatedAt = try fields.date("updatedAt")
 
         self.id = id
@@ -338,6 +341,7 @@ nonisolated extension SyncedPlaylist: StreamenCloudPayloadMappable {
         self.sourceTypeRaw = sourceTypeRaw
         self.epgURL = epgURL
         self.syncEnabled = syncEnabled
+        isEnabled = enabled
         self.hiddenTabsRaw = hiddenTabsRaw
         combinedTypesRaw = combinedTypes
         combinedPriority = combinedRank

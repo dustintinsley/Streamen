@@ -101,6 +101,7 @@ nonisolated struct PlaylistConfigValues: Codable, Equatable {
     var sourceTypeRaw: String
     var epgURL: String?
     var syncEnabled: Bool
+    var isEnabled: Bool
     var hiddenTabsRaw: String
     var combinedTypesRaw: String
     var combinedPriority: Int?
@@ -114,6 +115,7 @@ nonisolated struct PlaylistConfigValues: Codable, Equatable {
         sourceTypeRaw: String,
         epgURL: String?,
         syncEnabled: Bool,
+        isEnabled: Bool = true,
         hiddenTabsRaw: String = "",
         combinedTypesRaw: String = "",
         combinedPriority: Int? = nil
@@ -126,6 +128,7 @@ nonisolated struct PlaylistConfigValues: Codable, Equatable {
         self.sourceTypeRaw = sourceTypeRaw
         self.epgURL = epgURL
         self.syncEnabled = syncEnabled
+        self.isEnabled = isEnabled
         self.hiddenTabsRaw = hiddenTabsRaw
         self.combinedTypesRaw = combinedTypesRaw
         self.combinedPriority = combinedPriority
@@ -133,7 +136,8 @@ nonisolated struct PlaylistConfigValues: Codable, Equatable {
 
     /// Hand-rolled decode so a shadow baseline persisted before Stalker support
     /// (no `macAddress` key), before hidden tabs (no `hiddenTabsRaw`) or before
-    /// combined playlists (no `combinedTypesRaw` / `combinedPriority`) still
+    /// combined playlists (no `combinedTypesRaw` / `combinedPriority`) or before
+    /// the Enabled switch (no `isEnabled`, which falls back to true) still
     /// decodes — the field falls back to "" rather than failing the whole
     /// baseline, which would discard the shadow and risk a spurious mass reconcile.
     nonisolated init(from decoder: any Decoder) throws {
@@ -146,6 +150,7 @@ nonisolated struct PlaylistConfigValues: Codable, Equatable {
         sourceTypeRaw = try container.decode(String.self, forKey: .sourceTypeRaw)
         epgURL = try container.decodeIfPresent(String.self, forKey: .epgURL)
         syncEnabled = try container.decode(Bool.self, forKey: .syncEnabled)
+        isEnabled = try container.decodeIfPresent(Bool.self, forKey: .isEnabled) ?? true
         hiddenTabsRaw = try container.decodeIfPresent(String.self, forKey: .hiddenTabsRaw) ?? ""
         combinedTypesRaw = try container.decodeIfPresent(String.self, forKey: .combinedTypesRaw) ?? ""
         combinedPriority = try container.decodeIfPresent(Int.self, forKey: .combinedPriority)

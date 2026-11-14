@@ -20,6 +20,7 @@ extension CloudSyncEngine {
             sourceTypeRaw: playlist.sourceTypeRaw,
             epgURL: playlist.epgURL,
             syncEnabled: playlist.syncEnabled,
+            isEnabled: playlist.isEnabled,
             hiddenTabsRaw: playlist.hiddenTabsRaw,
             combinedTypesRaw: playlist.combinedTypesRaw,
             combinedPriority: playlist.combinedPriority
@@ -36,6 +37,7 @@ extension CloudSyncEngine {
             sourceTypeRaw: mirror.sourceTypeRaw,
             epgURL: mirror.epgURL,
             syncEnabled: mirror.syncEnabled,
+            isEnabled: mirror.isEnabled,
             hiddenTabsRaw: mirror.hiddenTabsRaw,
             combinedTypesRaw: mirror.combinedTypesRaw,
             combinedPriority: mirror.combinedPriority
@@ -108,6 +110,7 @@ nonisolated extension Playlist {
         sourceTypeRaw = value.sourceTypeRaw
         epgURL = value.epgURL
         syncEnabled = value.syncEnabled
+        isEnabled = value.isEnabled
         hiddenTabsRaw = value.hiddenTabsRaw
         combinedTypesRaw = value.combinedTypesRaw
         combinedPriority = value.combinedPriority
@@ -126,6 +129,7 @@ nonisolated extension SyncedPlaylist {
             sourceTypeRaw: value.sourceTypeRaw,
             epgURL: value.epgURL,
             syncEnabled: value.syncEnabled,
+            isEnabled: value.isEnabled,
             hiddenTabsRaw: value.hiddenTabsRaw,
             combinedTypesRaw: value.combinedTypesRaw,
             combinedPriority: value.combinedPriority
@@ -141,6 +145,7 @@ nonisolated extension SyncedPlaylist {
         sourceTypeRaw = value.sourceTypeRaw
         epgURL = value.epgURL
         syncEnabled = value.syncEnabled
+        isEnabled = value.isEnabled
         hiddenTabsRaw = value.hiddenTabsRaw
         combinedTypesRaw = value.combinedTypesRaw
         combinedPriority = value.combinedPriority

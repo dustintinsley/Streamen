@@ -58,6 +58,18 @@ struct PlaylistDetailView: View {
         playlists.isLocked(playlist)
     }
 
+    /// Whether this playlist can't be switched off (see `[Playlist].mustStayEnabled`).
+    var isLastEnabledPlaylist: Bool {
+        playlists.mustStayEnabled(playlist)
+    }
+
+    var enabledFooter: LocalizedStringKey {
+        if isLastEnabledPlaylist {
+            return "At least one playlist has to stay enabled."
+        }
+        return "When off, this playlist is hidden from Home, Live TV, Movies, Series, Search and the playlist menu, and it stops syncing. It stays here in Settings."
+    }
+
     /// The Status line. The plan's lock outranks every sync state — none of
     /// them can change while it holds.
     var statusLabel: LocalizedStringResource {
@@ -153,6 +165,8 @@ struct PlaylistDetailView: View {
                         }
                     }
                 }
+
+                enabledSection
 
                 if playlist.supportsStreamFormatChoice {
                     streamFormatSection
@@ -336,6 +350,17 @@ struct PlaylistDetailView: View {
                     SecureField("Password", text: $editPassword)
                         .textContentType(.password)
                 }
+            }
+        }
+
+        // MARK: - Enabled Section
+
+        private var enabledSection: some View {
+            Section {
+                Toggle("Enabled", isOn: $playlist.isEnabled)
+                    .disabled(isLastEnabledPlaylist)
+            } footer: {
+                Text(enabledFooter)
             }
         }
 

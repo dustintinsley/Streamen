@@ -37,6 +37,7 @@ final class SyncedPlaylist {
     var sourceTypeRaw: String = PlaylistSourceType.xtream.rawValue
     var epgURL: String?
     var syncEnabled: Bool = true
+    var isEnabled: Bool = true
     var hiddenTabsRaw: String = ""
     var combinedTypesRaw: String = ""
     var combinedPriority: Int?
@@ -56,6 +57,7 @@ final class SyncedPlaylist {
         sourceTypeRaw: String,
         epgURL: String?,
         syncEnabled: Bool,
+        isEnabled: Bool = true,
         hiddenTabsRaw: String = "",
         combinedTypesRaw: String = "",
         combinedPriority: Int? = nil,
@@ -70,6 +72,7 @@ final class SyncedPlaylist {
         self.sourceTypeRaw = sourceTypeRaw
         self.epgURL = epgURL
         self.syncEnabled = syncEnabled
+        self.isEnabled = isEnabled
         self.hiddenTabsRaw = hiddenTabsRaw
         self.combinedTypesRaw = combinedTypesRaw
         self.combinedPriority = combinedPriority

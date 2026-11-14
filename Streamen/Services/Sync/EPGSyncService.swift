@@ -223,7 +223,8 @@ final class EPGSyncService {
         isBackgroundRefresh = background
         let manager = EPGSyncManager(modelContainer: container)
         let playlists = (try? ModelContext(container).fetch(FetchDescriptor<Playlist>())) ?? []
-        let lockedPlaylistIDs = Set(playlists.filter { playlists.isLocked($0) }.map(\.id))
+        // Disabled playlists are skipped like locked ones: nothing shows their guide.
+        let lockedPlaylistIDs = Set(playlists.filter { playlists.isLocked($0) || !$0.isEnabled }.map(\.id))
         // Background guide refresh: run below the UI so an in-flight sync (which
         // saves into the shared catalog container, churning browse `@Query`s)
         // yields CPU to the main thread instead of competing with it. The

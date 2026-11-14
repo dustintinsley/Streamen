@@ -126,7 +126,7 @@ extension SettingsView {
             var body: some View {
                 SettingsList {
                     Section {
-                        Toggle("Force Premium", isOn: Binding(
+                        Toggle("Force Pro", isOn: Binding(
                             get: { premium.debugForcePremium },
                             set: { premium.debugForcePremium = $0 }
                         ))
@@ -136,7 +136,7 @@ extension SettingsView {
                             recommendationsRecalcToken += 1
                         }
                     } footer: {
-                        Text("DEBUG only. Force Premium previews the free tier and paywall. Recalculate rebuilds the For You row now, bypassing the once-a-day throttle.")
+                        Text("DEBUG only. Force Pro previews the free tier and paywall. Recalculate rebuilds the For You row now, bypassing the once-a-day throttle.")
                     }
                 }
                 .platformNavigationTitle("Developer")
@@ -165,7 +165,7 @@ extension SettingsView {
                 }
 
                 VStack(alignment: .leading, spacing: 16) {
-                    TVSettingsSectionLabel(premium.isPremium ? "Included" : "Premium Features")
+                    TVSettingsSectionLabel(premium.isPremium ? "Included" : "Pro Features")
                     tvPremiumFeatureGrid
                 }
             }
@@ -200,7 +200,7 @@ extension SettingsView {
                     Button {
                         presentPaywall(nil)
                     } label: {
-                        Label("Upgrade to Premium", systemImage: "crown")
+                        Label("Upgrade to Pro", systemImage: "crown")
                     }
                     .buttonStyle(TVSettingsActionButtonStyle(prominent: true))
 

@@ -25,6 +25,7 @@ import SwiftUI
 
                 tvServerSection
                 tvAccountSection
+                tvEnabledSection
                 tvStreamFormatSection
                 tvSyncSection
                 tvActionsSection
@@ -170,6 +171,31 @@ import SwiftUI
                         .padding(.horizontal, TVSettingsMetrics.rowHPadding)
                         .padding(.top, 4)
                 }
+            }
+        }
+
+        var tvEnabledSection: some View {
+            VStack(alignment: .leading, spacing: 8) {
+                VStack(spacing: 2) {
+                    Button {
+                        playlist.isEnabled.toggle()
+                    } label: {
+                        HStack(spacing: 16) {
+                            Text("Enabled")
+                            Spacer(minLength: 0)
+                            Text(playlist.isEnabled ? "On" : "Off")
+                                .foregroundStyle(.secondary)
+                        }
+                    }
+                    .buttonStyle(TVSettingsRowButtonStyle())
+                    .disabled(isLastEnabledPlaylist)
+                }
+
+                Text(enabledFooter)
+                    .font(.caption)
+                    .foregroundStyle(.secondary)
+                    .padding(.horizontal, TVSettingsMetrics.rowHPadding)
+                    .padding(.top, 4)
             }
         }
 

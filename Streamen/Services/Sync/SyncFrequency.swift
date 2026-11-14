@@ -301,7 +301,9 @@ extension Playlist {
     /// content tabs are showing (`[Playlist].scope(for:isPremium:)`).
     func autoSyncCandidate(in scope: CatalogScope) -> AutoSync.Candidate {
         AutoSync.Candidate(
-            syncEnabled: syncEnabled,
+            // A disabled playlist is out of use, so it never auto-syncs; Sync
+            // Now in its settings still works.
+            syncEnabled: syncEnabled && isEnabled,
             status: syncStatus,
             lastSyncDate: lastSyncDate,
             isActive: scope.playlistIDs.contains(id),

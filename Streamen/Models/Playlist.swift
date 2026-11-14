@@ -72,6 +72,12 @@ final class Playlist {
     var allowedOutputFormatsRaw: String?
 
     var syncEnabled: Bool = true
+    /// Whether the playlist is in use (Settings › Playlist › Enabled). A
+    /// disabled playlist stays listed in Settings but is left out of every
+    /// browse surface, the playlist switchers, Combined, Search and auto-sync —
+    /// the resolver helpers in `QuickSwitchResolver.swift` filter it. Synced
+    /// with the rest of the playlist config.
+    var isEnabled: Bool = true
     /// Sync this playlist every time the app launches, whatever the sync
     /// frequency and whether or not it is on screen (`AutoSync.shouldSync`).
     /// Device-local, like the stream format: how much a launch should do is a

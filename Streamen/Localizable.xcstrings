@@ -7254,6 +7254,64 @@
         }
       }
     },
+    "At least one playlist has to stay enabled.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "يجب أن تبقى قائمة تشغيل واحدة على الأقل مفعّلة."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Mindestens eine Playlist muss aktiviert bleiben."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Al menos una lista tiene que seguir activada."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Au moins une playlist doit rester activée."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Almeno una playlist deve restare attivata."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "少なくとも1つのプレイリストを有効にしておく必要があります。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "재생 목록을 하나 이상 사용 상태로 유지해야 합니다."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Pelo menos uma playlist tem de continuar ativada."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "至少要保留一个播放列表处于启用状态。"
+          }
+        }
+      }
+    },
     "Audio & Subtitles": {
       "comment": "AetherEngine options in Settings.",
       "localizations": {
@@ -19338,6 +19396,64 @@
         }
       }
     },
+    "Disable": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "إيقاف"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Deaktivieren"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desactivar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactiver"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Disattiva"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "無効にする"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "사용 안 함"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Desativar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "停用"
+          }
+        }
+      }
+    },
     "Disabled": {
       "localizations": {
         "ar": {
@@ -22074,6 +22190,64 @@
           "stringUnit": {
             "state": "translated",
             "value": "空画面"
+          }
+        }
+      }
+    },
+    "Enable": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "تفعيل"
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Aktivieren"
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activar"
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Activer"
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Attiva"
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "有効にする"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "사용"
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Ativar"
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "启用"
           }
         }
       }
@@ -86653,6 +86827,64 @@
           "stringUnit": {
             "state": "translated",
             "value": "关闭时，搜索仅查找当前播放列表中的内容。开启此项可在您所有的播放列表中搜索。"
+          }
+        }
+      }
+    },
+    "When off, this playlist is hidden from Home, Live TV, Movies, Series, Search and the playlist menu, and it stops syncing. It stays here in Settings.": {
+      "localizations": {
+        "ar": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "عند إيقافها، تُخفى قائمة التشغيل هذه من الرئيسية والبث المباشر والأفلام والمسلسلات والبحث وقائمة قوائم التشغيل، وتتوقف عن المزامنة. وتبقى هنا في الإعدادات."
+          }
+        },
+        "de": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Wenn deaktiviert, wird diese Playlist in Start, Live-TV, Filme, Serien, Suchen und im Playlist-Menü ausgeblendet und nicht mehr synchronisiert. In den Einstellungen bleibt sie erhalten."
+          }
+        },
+        "es": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Si está desactivada, esta lista se oculta en Inicio, TV en directo, Películas, Serie, Buscar y el menú de listas, y deja de sincronizarse. Sigue aquí en Ajustes."
+          }
+        },
+        "fr": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Désactivée, cette playlist est masquée dans Accueil, TV en direct, Films, Séries, Rechercher et le menu des playlists, et n'est plus synchronisée. Elle reste ici dans les Réglages."
+          }
+        },
+        "it": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Se disattivata, questa playlist viene nascosta da Home, TV in diretta, Film, Serie, Cerca e dal menu delle playlist, e non viene più sincronizzata. Resta qui nelle Impostazioni."
+          }
+        },
+        "ja": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "オフにすると、このプレイリストはホーム、ライブTV、映画、シリーズ、検索、プレイリストメニューに表示されなくなり、同期も停止します。設定にはそのまま残ります。"
+          }
+        },
+        "ko": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "끄면 이 재생 목록은 홈, 라이브 TV, 영화, 시리즈, 검색 및 재생 목록 메뉴에서 숨겨지고 동기화가 중지됩니다. 설정에는 그대로 남아 있습니다."
+          }
+        },
+        "pt": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "Quando desativada, esta playlist fica oculta em Início, TV ao vivo, Filmes, Séries, Buscar e no menu de playlists, e deixa de sincronizar. Continua aqui em Ajustes."
+          }
+        },
+        "zh-Hans": {
+          "stringUnit": {
+            "state": "translated",
+            "value": "关闭后，此播放列表将在主页、直播电视、电影、剧集、搜索和播放列表菜单中隐藏，并停止同步。它仍保留在“设置”中。"
           }
         }
       }

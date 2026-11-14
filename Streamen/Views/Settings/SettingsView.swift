@@ -97,6 +97,9 @@ struct SettingsView: View {
         /// strands remote focus once the content scrolls. Not `private`: read by
         /// the SettingsView+Playlists extension (separate file).
         @State var selectedPlaylist: Playlist?
+        /// The playlist a Playlists-pane row's context menu asked to sync. Not
+        /// `private`: set by the SettingsView+Playlists extension.
+        @State var syncingPlaylist: Playlist?
         /// Whether Library's Categories & Channels is drilled into, replacing the
         /// whole detail pane (same reasoning as `selectedPlaylist`). Not
         /// `private`: set by the SettingsView+Library extension (separate file).

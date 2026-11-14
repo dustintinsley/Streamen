@@ -41,6 +41,9 @@
                     Spacer(minLength: 0)
                     if isLocked {
                         PremiumBadge()
+                    } else if !playlist.isEnabled {
+                        Text("Disabled")
+                            .foregroundStyle(.secondary)
                     } else {
                         PlaylistSyncAccessory(state: playlist.syncState(isActive: isInScope), size: 26)
                     }

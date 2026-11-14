@@ -29,6 +29,36 @@ private extension [Playlist] {
     }
 }
 
+/// A playlist row's context menu (right-click, long press, or a long press of
+/// the Siri Remote's select): Sync Now, and Enable / Disable without opening
+/// the playlist's settings. The playlist that has to stay enabled (see
+/// `[Playlist].mustStayEnabled`) offers Disable greyed out.
+private struct PlaylistRowMenu: View {
+    let playlist: Playlist
+    let mustStayEnabled: Bool
+    let syncNow: () -> Void
+
+    var body: some View {
+        Button(action: syncNow) {
+            Label("Sync Now", systemImage: "arrow.triangle.2.circlepath")
+        }
+        if playlist.isEnabled {
+            Button {
+                playlist.isEnabled = false
+            } label: {
+                Label("Disable", systemImage: "eye.slash")
+            }
+            .disabled(mustStayEnabled)
+        } else {
+            Button {
+                playlist.isEnabled = true
+            } label: {
+                Label("Enable", systemImage: "eye")
+            }
+        }
+    }
+}
+
 #if !os(tvOS)
 
     struct PlaylistsSettingsView: View {
@@ -40,6 +70,8 @@ private extension [Playlist] {
         @State private var premium = PremiumManager.shared
         @State private var showingAddPlaylist = false
         @State private var showPaywall = false
+        /// The playlist a row's context menu asked to sync.
+        @State private var syncingPlaylist: Playlist?
 
         /// Whether a new playlist can be added for free (first playlist always free).
         private var canAddPlaylist: Bool {
@@ -66,6 +98,19 @@ private extension [Playlist] {
             .sheet(isPresented: $showingAddPlaylist) {
                 LoginView(isModal: true)
             }
+            .sheet(item: $syncingPlaylist) { playlist in
+                SyncProgressView(playlist: playlist)
+            }
+        }
+
+        /// Sync Now from a row's context menu; a locked playlist opens the
+        /// paywall instead, as in its settings.
+        private func syncNow(_ playlist: Playlist) {
+            if playlists.isLocked(playlist) {
+                showPaywall = true
+            } else {
+                syncingPlaylist = playlist
+            }
         }
 
         private var playlistsSection: some View {
@@ -88,6 +133,9 @@ private extension [Playlist] {
                             Spacer(minLength: 0)
                             if playlists.isLocked(playlist) {
                                 PremiumBadge()
+                            } else if !playlist.isEnabled {
+                                Text("Disabled")
+                                    .foregroundStyle(.secondary)
                             } else {
                                 PlaylistSyncAccessory(state: playlist.syncState(
                                     isActive: scope.playlistIDs.contains(playlist.id)
@@ -95,6 +143,12 @@ private extension [Playlist] {
                             }
                         }
                         .padding(.vertical, 1)
+                    }
+                    .contextMenu {
+                        PlaylistRowMenu(
+                            playlist: playlist,
+                            mustStayEnabled: playlists.mustStayEnabled(playlist)
+                        ) { syncNow(playlist) }
                     }
                 }
                 .onDelete(perform: deletePlaylists)
@@ -211,6 +265,9 @@ private extension [Playlist] {
                 }
                 tvAutoSyncSection
             }
+            .fullScreenCover(item: $syncingPlaylist) { playlist in
+                SyncProgressView(playlist: playlist)
+            }
         }
 
         /// The row opens the paywall or the Combined View page, per
@@ -318,8 +375,24 @@ private extension [Playlist] {
                 ) {
                     if playlists.isLocked(playlist) {
                         presentPaywall(.multiplePlaylists)
+                    } else if !playlist.isEnabled {
+                        // Nothing to switch to: open its settings, where it can
+                        // be enabled again.
+                        selectedPlaylist = playlist
                     } else {
                         switchPlaylist(to: playlist, from: scope)
+                    }
+                }
+                .contextMenu {
+                    PlaylistRowMenu(
+                        playlist: playlist,
+                        mustStayEnabled: playlists.mustStayEnabled(playlist)
+                    ) {
+                        if playlists.isLocked(playlist) {
+                            presentPaywall(.multiplePlaylists)
+                        } else {
+                            syncingPlaylist = playlist
+                        }
                     }
                 }
 

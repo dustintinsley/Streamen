@@ -39,9 +39,9 @@ enum HeroItem: Identifiable, Hashable {
     var imageURL: URL? {
         switch self {
         case let .movie(movie, backdrop, _):
-            backdrop ?? URL(string: movie.streamIcon ?? "")
+            backdrop ?? TMDBClient.backdropURL(movie.backdropPath) ?? URL(string: movie.streamIcon ?? "")
         case let .series(series, backdrop, _):
-            backdrop ?? URL(string: series.cover ?? "")
+            backdrop ?? TMDBClient.backdropURL(series.backdropPath) ?? URL(string: series.cover ?? "")
         }
     }
 

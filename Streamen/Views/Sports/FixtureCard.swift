@@ -418,10 +418,14 @@ struct TeamCrest: View {
     @State private var crestColour: TeamPaletteRGB?
 
     var body: some View {
+        // Read here, not inside the image's closure: the closure alone doesn't
+        // redraw when the crest's colour arrives, so the outline only showed
+        // once something else (focus, a score update) redrew the card.
+        let outline = TeamCrestOutline.color(crest: crestColour, backdrop: backdrop)
         CachedAsyncImage(url: team.logoURL, maxPixelSize: size * 2) { phase in
             switch phase {
             case let .success(image):
-                crest(image)
+                crest(image, outline: outline)
             default:
                 placeholder
             }
@@ -435,9 +439,9 @@ struct TeamCrest: View {
     }
 
     @ViewBuilder
-    private func crest(_ image: Image) -> some View {
+    private func crest(_ image: Image, outline: Color?) -> some View {
         let fitted = image.resizable().scaledToFit()
-        if let outline = TeamCrestOutline.color(crest: crestColour, backdrop: backdrop) {
+        if let outline {
             fitted.silhouetteOutline(outline, width: size >= 100 ? 2 : 1)
         } else {
             fitted

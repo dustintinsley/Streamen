@@ -80,7 +80,7 @@
                         // Away left, home right (see `SportsFixture.awayLeads`).
                         side(fixture.leadingSide)
                         score(fixture.leadingSide)
-                        status.frame(minWidth: 150)
+                        status.frame(width: Self.statusWidth)
                         score(fixture.trailingSide)
                         side(fixture.trailingSide)
                     }
@@ -155,8 +155,26 @@
             .opacity(isDimmed(competitor) ? 0.6 : 1)
         }
 
+        /// Fixed widths for the middle of the card, held even when there is no
+        /// score yet, so every card's crests sit in the same place down the
+        /// column — a game that hasn't started otherwise widens its sides and
+        /// draws its crests in towards the centre.
+        private static let scoreWidth: CGFloat = 130
+        private static let statusWidth: CGFloat = 260
+
+        /// An empty slot when there is no score: a frame around empty content
+        /// takes no space at all.
         @ViewBuilder
         private func score(_ competitor: SportsCompetitor?) -> some View {
+            if showsScores, competitor != nil {
+                scoreText(competitor).frame(width: Self.scoreWidth)
+            } else {
+                Color.clear.frame(width: Self.scoreWidth, height: 0)
+            }
+        }
+
+        @ViewBuilder
+        private func scoreText(_ competitor: SportsCompetitor?) -> some View {
             if showsScores, let competitor {
                 Text(verbatim: competitor.displayScore)
                     .font(.system(

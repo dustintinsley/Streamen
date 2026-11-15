@@ -73,6 +73,12 @@ enum LiveTVSection: Identifiable, Hashable {
         }
     }
 
+    /// The synced category, nil for a virtual collection.
+    var category: Category? {
+        if case let .category(category) = self { return category }
+        return nil
+    }
+
     var isVirtual: Bool {
         switch self {
         case .favorites, .recentlyWatched: true

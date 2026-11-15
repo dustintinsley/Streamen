@@ -29,7 +29,7 @@ struct LibraryToolbarModifier: ViewModifier {
     func body(content: Content) -> some View {
         content
             .toolbar {
-                if playlists.count > 1 {
+                if playlists.offersPlaylistSwitch {
                     ToolbarItem(placement: .automatic) { playlistSwitcher }
                 }
 

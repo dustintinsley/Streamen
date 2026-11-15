@@ -116,10 +116,10 @@ extension PlaylistTab {
 
 private func libraryTabsFooter(_ scope: CatalogScope, activePlaylist: Playlist?) -> LocalizedStringKey? {
     if scope.isCombined {
-        return "In Combined View, Live TV, Movies and Series follow each playlist's content types. Sports applies to every playlist."
+        return "In Combined View, Live TV, Movies and Series follow each playlist's content types. Sports applies to every playlist. Hide Empty Tabs hides Live TV, Movies or Series while there's nothing in them."
     }
     guard let activePlaylist else { return nil }
-    return "Live TV, Movies and Series apply to \(activePlaylist.name), your active playlist. Sports applies to every playlist."
+    return "Live TV, Movies and Series apply to \(activePlaylist.name), your active playlist. Sports applies to every playlist. Hide Empty Tabs hides Live TV, Movies or Series while there's nothing in them."
 }
 
 #if !os(tvOS)
@@ -134,6 +134,7 @@ private func libraryTabsFooter(_ scope: CatalogScope, activePlaylist: Playlist?)
         private var searchAllPlaylists = SearchSettings.searchAllPlaylistsDefault
         @AppStorage(LibrarySettings.groupDuplicateTitlesKey)
         private var groupDuplicateTitles = LibrarySettings.groupDuplicateTitlesDefault
+        @AppStorage(LibrarySettings.hideEmptyTabsKey) private var hideEmptyTabs = LibrarySettings.hideEmptyTabsDefault
 
         var body: some View {
             let scope = catalogScope
@@ -156,6 +157,7 @@ private func libraryTabsFooter(_ scope: CatalogScope, activePlaylist: Playlist?)
                         }
                     }
                     Toggle("Sports", isOn: $sportsTabEnabled)
+                    Toggle("Hide Empty Tabs", isOn: $hideEmptyTabs)
                 } header: {
                     Text("Tabs")
                 } footer: {
@@ -227,6 +229,7 @@ private func libraryTabsFooter(_ scope: CatalogScope, activePlaylist: Playlist?)
                         }
                     }
                     TVOptionToggleRow(title: "Sports", isOn: $sportsTabEnabled)
+                    TVOptionToggleRow(title: "Hide Empty Tabs", isOn: $hideEmptyTabs)
                     if let footer = libraryTabsFooter(scope, activePlaylist: activePlaylist) {
                         Text(footer)
                             .font(.system(size: 20))

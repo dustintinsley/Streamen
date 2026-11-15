@@ -26,6 +26,7 @@ struct MainTabView: View {
     /// Whether the Sports tab appears in the tab bar (Settings toggle). When off,
     /// the hub is still reachable from the Home rail header.
     @AppStorage(SportsSyncService.tabEnabledKey) private var sportsTabEnabled = SportsSyncService.tabEnabledDefault
+    @AppStorage(LibrarySettings.hideEmptyTabsKey) private var hideEmptyTabs = LibrarySettings.hideEmptyTabsDefault
 
     /// Selected tab and the Movies/Series navigation stacks, shared so an
     /// `onOpenURL` deep link can switch tabs and push a detail screen.
@@ -67,6 +68,35 @@ struct MainTabView: View {
     /// contributes.
     private func visibleTabs(in scope: CatalogScope) -> Set<PlaylistTab> {
         scope.visibleTabs(isolatedHidden: playlists.primaryMember(of: scope)?.hiddenTabs ?? [])
+            .subtracting(emptyTabs(in: scope))
+    }
+
+    /// With Hide Empty Tabs on, the content tabs none of the scope's members
+    /// has a visible category for — what the tab would show as empty. Read
+    /// from each member's last sync date and the hidden-category query, so a
+    /// finished sync or a category hidden or shown re-evaluates it. With no
+    /// playlist at all nothing is hidden.
+    private func emptyTabs(in scope: CatalogScope) -> Set<PlaylistTab> {
+        guard hideEmptyTabs else { return [] }
+        _ = hiddenCategories.count
+        return Set(PlaylistTab.allCases.filter { tab in
+            let members = scope.members(for: tab)
+            guard !members.isEmpty else { return false }
+            return !members.contains { id in
+                _ = playlists.first { $0.id == id }?.lastSyncDate
+                return hasVisibleCategory(playlistID: id, tab: tab)
+            }
+        })
+    }
+
+    private func hasVisibleCategory(playlistID: UUID, tab: PlaylistTab) -> Bool {
+        // `Category.id` is "<playlist id>-<type>-<api id>".
+        let prefix = "\(playlistID.uuidString)-\(tab.categoryType.rawValue)-"
+        var descriptor = FetchDescriptor<Category>(
+            predicate: #Predicate { $0.id.starts(with: prefix) && !$0.isHidden }
+        )
+        descriptor.fetchLimit = 1
+        return ((try? modelContext.fetchCount(descriptor)) ?? 0) > 0
     }
 
     private func showsTab(_ tab: AppTab) -> Bool {

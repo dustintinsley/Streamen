@@ -82,6 +82,7 @@
                 title: section.titleText,
                 icon: section.icon,
                 header: header,
+                category: section.category,
                 focusSettleAction: {
                     selectedSection = section
                     onCategoryFocused()

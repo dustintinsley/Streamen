@@ -5,8 +5,11 @@
 //  Fades the tvOS tab bar out whenever focus is anywhere but the bar, and
 //  back in the moment focus reaches it. Faded rather than hidden: the bar
 //  stays in the layout and focusable, so Up from a screen's top row and Menu
-//  from its top level still land on it the way they always have, and nothing
-//  on the screen moves when it comes and goes.
+//  from its top level still land on it the way they always have.
+//
+//  While it's faded, the tabs' content slides up into the room it leaves:
+//  each tab's top safe-area inset gives back the bar's height, and takes it
+//  again as the bar fades in.
 //
 
 #if os(tvOS)
@@ -23,6 +26,9 @@
         private static let fadeDuration: TimeInterval = 0.25
 
         private weak var tabBar: UITabBar?
+        /// How far the content moves up while the bar is faded: the bar's share
+        /// of a tab's top safe-area inset, measured while it shows.
+        private var barInset: CGFloat = 0
         private var observer: NSObjectProtocol?
 
         func start() {
@@ -46,10 +52,39 @@
             guard item != nil, let window = Self.keyWindow, let tabBar = tabBar(in: window) else { return }
             let inTabBar = (item as? UIView)?.isDescendant(of: tabBar) ?? false
             let target: CGFloat = inTabBar ? 1 : Self.fadedAlpha
-            guard tabBar.alpha != target else { return }
+            let controller = Self.tabBarController(of: tabBar)
+            let children = controller?.viewControllers ?? []
+            if inTabBar || barInset == 0 {
+                measureBarInset(children: children, window: window)
+            }
+            let topAdjustment = inTabBar ? 0 : -barInset
+            let needsShift = children.contains { $0.additionalSafeAreaInsets.top != topAdjustment }
+            guard tabBar.alpha != target || needsShift else { return }
             UIView.animate(withDuration: Self.fadeDuration, delay: 0, options: [.beginFromCurrentState, .allowUserInteraction]) {
                 tabBar.alpha = target
+                for child in children where child.additionalSafeAreaInsets.top != topAdjustment {
+                    child.additionalSafeAreaInsets.top = topAdjustment
+                }
+                controller?.view.layoutIfNeeded()
             }
+        }
+
+        /// The bar's part of the selected tab's top inset: what's left once
+        /// the screen's own (overscan) inset and any shift already applied
+        /// are taken out.
+        private func measureBarInset(children: [UIViewController], window: UIWindow) {
+            guard let child = children.first(where: { $0.viewIfLoaded?.window != nil }) else { return }
+            let inset = child.view.safeAreaInsets.top - child.additionalSafeAreaInsets.top - window.safeAreaInsets.top
+            if inset > 0 { barInset = inset }
+        }
+
+        private static func tabBarController(of tabBar: UITabBar) -> UITabBarController? {
+            var responder: UIResponder? = tabBar
+            while let next = responder?.next {
+                if let controller = next as? UITabBarController { return controller }
+                responder = next
+            }
+            return nil
         }
 
         private static var keyWindow: UIWindow? {

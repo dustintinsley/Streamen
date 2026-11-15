@@ -21,6 +21,9 @@
         /// A group title drawn above the row — a Combined member's name over
         /// its first category. Plain text, so focus steps over it.
         var header: String?
+        /// The provider category the row stands for, which gives it the
+        /// Hide Category / Show Hidden Categories menu on a long press.
+        var category: Category?
         /// Replaces the symbol's default VoiceOver name when the icon carries
         /// meaning of its own, such as a warning badge.
         var iconAccessibilityLabel: Text?
@@ -293,6 +296,7 @@
             }
             .buttonStyle(TVCardButtonStyle(focusScale: 1.03, suppressFocusEffects: suppressed))
             .focused($focused, equals: item.id)
+            .categoryVisibilityMenu(item.category)
             .onMoveCommand { direction in
                 guard direction == .right, rightRunsAction, item.runsOnRight else { return }
                 focusSettle?.cancel()

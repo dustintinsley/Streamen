@@ -65,3 +65,22 @@ ghcr.io.
 - [ ] **ffmpeg licence.** The DMG bundles an LGPL ffmpeg and the image uses
       Ubuntu's (GPL) ffmpeg: publish the matching ffmpeg source, or a link to
       that exact version, on the download page.
+
+## Before release: remove the screenshot debug features
+
+Added (2026-11-14) to take App Store screenshots with made-up content; all
+Debug-only, so Release builds never show them, but the code should go once
+the screenshots are final.
+
+- [ ] **Sports Hub screenshot demo.** Settings › Sports › Screenshot Demo
+      and `SportsScreenshotDemoProvider` (`SportsScreenshotDemo.swift`), plus
+      the Debug-only hooks it added in `SportsCatalog`, `SportsFollowService`,
+      `SportsSyncService`, `SettingsView+Sports`, `SettingsView+TVComponents`,
+      `GameDetailSheet`, `TVGameDetailSheet`, `LeagueDetailView`,
+      `LeagueTeamsView` and `TVManageTeamsPane`. Commit 55da51ae added them
+      all; reverting its hunks is the quickest route.
+- [ ] **Check nothing else is left.** Search for `ScreenshotDemo` and review
+      the other `#if DEBUG` blocks before the release build.
+- [ ] **Outside the repo.** The `Screenshot Demo` folder (demo server,
+      made-up playlist, crests, `frame.swift`) is not in git; keep it if
+      the screenshots will be retaken, otherwise it can be deleted.

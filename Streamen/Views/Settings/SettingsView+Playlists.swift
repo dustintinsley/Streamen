@@ -316,12 +316,15 @@ private struct PlaylistRowMenu: View {
                 } else {
                     let scope = catalogScope
                     let column = QuickSwitchResolver.playlistColumn(playlists, scope: scope, isPremium: premium.isPremium)
-                    TVCombinedSwitchRow(
-                        memberNames: column.combinedMemberNames,
-                        isActive: column.isCombinedCurrent,
-                        isLocked: column.combinedAction == .paywall
-                    ) {
-                        selectCombined(column.combinedAction)
+                    // One enabled playlist leaves nothing to combine.
+                    if playlists.offersPlaylistSwitch {
+                        TVCombinedSwitchRow(
+                            memberNames: column.combinedMemberNames,
+                            isActive: column.isCombinedCurrent,
+                            isLocked: column.combinedAction == .paywall
+                        ) {
+                            selectCombined(column.combinedAction)
+                        }
                     }
                     ForEach(playlists) { playlist in
                         tvPlaylistRow(playlist, scope: scope)
@@ -350,7 +353,7 @@ private struct PlaylistRowMenu: View {
                         .foregroundStyle(.secondary)
                         .padding(.horizontal, TVSettingsMetrics.rowHPadding)
                         .padding(.top, 6)
-                } else if playlists.count > 1 {
+                } else if playlists.offersPlaylistSwitch {
                     Text("Switching playlist changes the content shown across Home, Movies, Series and Live TV.")
                         .font(.system(size: 20))
                         .foregroundStyle(.secondary)

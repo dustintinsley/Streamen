@@ -149,6 +149,7 @@ struct CategoryGridSection: View {
                         CategoryTile(name: category.name)
                     }
                     .posterCardButtonStyle()
+                    .categoryVisibilityMenu(category)
                 }
             }
             .padding(.horizontal)
@@ -262,6 +263,8 @@ struct CategoryPreviewRow<Item: Identifiable & Hashable & WatchlistFavoritable, 
                     }
                 }
             }
+            .contentShape(Rectangle())
+            .categoryVisibilityMenu(category)
             .padding(.horizontal)
 
             if items.isEmpty {

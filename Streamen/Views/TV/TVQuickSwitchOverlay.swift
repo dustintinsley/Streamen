@@ -113,14 +113,17 @@
                         )
                     )
                 } else {
-                    TVCombinedSwitchRow(
-                        memberNames: entries.combinedMemberNames,
-                        isActive: entries.isCombinedCurrent,
-                        isLocked: entries.combinedAction == .paywall
-                    ) {
-                        selectCombined(entries.combinedAction)
+                    // One enabled playlist leaves nothing to combine.
+                    if playlists.offersPlaylistSwitch {
+                        TVCombinedSwitchRow(
+                            memberNames: entries.combinedMemberNames,
+                            isActive: entries.isCombinedCurrent,
+                            isLocked: entries.combinedAction == .paywall
+                        ) {
+                            selectCombined(entries.combinedAction)
+                        }
+                        .focused($focus, equals: .combined)
                     }
-                    .focused($focus, equals: .combined)
 
                     ForEach(rows) { row in
                         TVPlaylistSwitchRow(
@@ -214,7 +217,7 @@
             playlists column: QuickSwitchPlaylistColumn,
             profiles: [QuickSwitchRow<UserProfile>]
         ) -> FocusTarget? {
-            if column.isCombinedCurrent {
+            if column.isCombinedCurrent, playlists.offersPlaylistSwitch {
                 return .combined
             }
             if let row = column.rows.first(where: \.isCurrent) ?? column.rows.first {

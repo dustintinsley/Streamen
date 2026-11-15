@@ -63,6 +63,7 @@ struct CategorySidebar: View {
             }
         }
         .tag(section.id)
+        .categoryVisibilityMenu(section.category)
     }
 }
 
@@ -178,6 +179,7 @@ struct LiveTVSectionGroupSection<Row: View>: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .categoryVisibilityMenu(currentSection?.category)
             .background(.bar)
             .sheet(isPresented: $showingPicker) {
                 CategoryPickerSheet(groups: groups, selectedSection: $selectedSection)
@@ -258,6 +260,7 @@ struct LiveTVSectionGroupSection<Row: View>: View {
                 .contentShape(Rectangle())
             }
             .buttonStyle(.plain)
+            .categoryVisibilityMenu(section.category)
         }
     }
 #endif

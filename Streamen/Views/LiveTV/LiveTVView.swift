@@ -184,11 +184,11 @@ struct LiveTVView: View {
             // After `libraryToolbar`, so Recordings and Multi-View lead the bar
             // as their own cluster, never beside Settings. Guide or List is
             // chosen in Settings › Live TV on every platform. The switcher's
-            // title (shown by `libraryToolbar` with several playlists) tells
+            // title (shown by `libraryToolbar` with several enabled playlists) tells
             // the cluster how much room is left for it.
             .liveTVToolbarCluster(
                 multiViewAvailable: !playlists.isEmpty && !categories.isEmpty,
-                switcherTitle: playlists.count > 1 ? playlists.selectionTitle(for: catalogScope) : nil
+                switcherTitle: playlists.offersPlaylistSwitch ? playlists.selectionTitle(for: catalogScope) : nil
             ) {
                 openMultiView()
             }

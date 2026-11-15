@@ -32,6 +32,13 @@ enum PlaylistSelectionStore {
 }
 
 extension [Playlist] {
+    /// Whether there is anything to switch between: two or more enabled
+    /// playlists (locked ones included, so the free plan still sees what Pro
+    /// adds). With one, no switcher and no Combined entry are shown.
+    var offersPlaylistSwitch: Bool {
+        filter(\.isEnabled).count > 1
+    }
+
     /// What a switch surface calls the selection in effect: Combined, or the
     /// one playlist shown — never the raw stored token.
     func selectionTitle(for scope: CatalogScope) -> String {

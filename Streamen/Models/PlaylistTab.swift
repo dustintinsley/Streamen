@@ -14,6 +14,15 @@ nonisolated enum PlaylistTab: String, CaseIterable, Identifiable {
     /// stay put so a stored value never changes just because the UI did.
     static let displayOrder: [PlaylistTab] = [.liveTV, .movies, .series]
 
+    /// The category type the tab browses.
+    var categoryType: CategoryType {
+        switch self {
+        case .movies: .vod
+        case .series: .series
+        case .liveTV: .live
+        }
+    }
+
     var appTab: AppTab {
         switch self {
         case .movies: .movies

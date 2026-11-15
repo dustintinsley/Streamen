@@ -261,6 +261,11 @@ struct CategoryPreviewRow<Item: Identifiable & Hashable & WatchlistFavoritable, 
                         Text("Show All")
                             .font(.subheadline)
                     }
+                    #if os(tvOS)
+                    // The header isn't focusable on tvOS, so the long press
+                    // that opens the menu lands on its one button.
+                    .categoryVisibilityMenu(category)
+                    #endif
                 }
             }
             .contentShape(Rectangle())

@@ -139,9 +139,14 @@
             HStack(alignment: .bottom, spacing: metrics.previewSpacing) {
                 // Top-aligned, a little below the video's top edge, so a short
                 // programme doesn't leave its title halfway down the picture.
-                EPGHeroInfo(hero: hero, settled: settledRow)
-                    .padding(.top, 8)
-                    .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
+                // Over a clear base: with no channel to describe the info draws
+                // nothing, and the picture must not slide into its place.
+                ZStack(alignment: .topLeading) {
+                    Color.clear
+                    EPGHeroInfo(hero: hero, settled: settledRow)
+                        .padding(.top, 8)
+                }
+                .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .topLeading)
 
                 EPGHeroVideoFigure(
                     target: target,

@@ -384,6 +384,18 @@
                     content
                 }
             }
+            .environment(\.guidePreviewTileHost, preview.controller?.tileHost)
+            .background(alignment: .topLeading) {
+                // The Guide preview's player runs here, outside the Guide that
+                // each category rebuilds, so changing category keeps it going.
+                if layoutMode == .guide, !recordingsShown, let tileHost = preview.controller?.tileHost {
+                    GuidePreviewTileLayer(
+                        host: tileHost,
+                        cornerRadius: EPGMetrics.current.previewVideoCornerRadius
+                    )
+                }
+            }
+            .coordinateSpace(.named(GuidePreviewTileHost.space))
             .environment(focusRegions)
             .paywall(isPresented: $showingRecordingsPaywall, highlight: .recordingServer)
             .onChange(of: offersRecordings) { _, offered in

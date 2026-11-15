@@ -56,6 +56,9 @@ struct EPGGridScroller: View {
 
     @State var sync = EPGScrollSync()
     @State private var selection: EPGSelection?
+    /// The channel the programme details asked to open in Multi-View, raised
+    /// when they finish dismissing.
+    @State private var pendingMultiView: LiveStream?
     @State private var scrollRequest: EPGScrollRequest?
     #if os(tvOS)
         /// For the channel actions' favourite toggle.
@@ -157,16 +160,25 @@ struct EPGGridScroller: View {
         .padding(.leading, metrics.channelColumnGap)
         .background(.background)
         #endif
-        .sheet(item: $selection) { selection in
+        .sheet(item: $selection, onDismiss: startPendingMultiView) { selection in
             EPGProgramDetailView(
                 stream: selection.stream,
                 cell: selection.cell,
                 now: now,
                 onPlay: { onPlay(selection.stream) },
-                onPlayCatchup: { onPlayCatchup(selection.stream, selection.cell) }
+                onPlayCatchup: { onPlayCatchup(selection.stream, selection.cell) },
+                // Raised once the sheet is gone: presenting Multi-View while
+                // the details dismiss drops it.
+                onStartMultiView: { pendingMultiView = selection.stream }
             )
             .recordActionFlow(toastPlacement: .sheet)
         }
+    }
+
+    private func startPendingMultiView() {
+        guard let stream = pendingMultiView else { return }
+        pendingMultiView = nil
+        onStartMultiView(stream)
     }
 
     private var grid: some View {

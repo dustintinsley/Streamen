@@ -50,7 +50,13 @@ struct SportsBackdrop: View {
                 )
             }
         }
-        .ignoresSafeArea(edges: .top)
+        // tvOS insets every screen by its overscan margins; the glow fills
+        // the whole TV rather than leaving grey bands down the sides.
+        #if os(tvOS)
+            .ignoresSafeArea(edges: [.top, .horizontal])
+        #else
+            .ignoresSafeArea(edges: .top)
+        #endif
         .allowsHitTesting(false)
         .accessibilityHidden(true)
     }

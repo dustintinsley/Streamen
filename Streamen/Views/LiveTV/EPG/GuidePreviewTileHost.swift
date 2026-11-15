@@ -32,7 +32,7 @@
         /// reported one so the picture holds still between Guides.
         var slotFrame: CGRect?
         /// The Live TV screen's coordinate space, which the layer is drawn in.
-        static let space = "streamen.guidePreviewTileSpace"
+        nonisolated static let space = "streamen.guidePreviewTileSpace"
         /// The pending release of a hero that went away.
         private var pendingRelease: Task<Void, Never>?
 

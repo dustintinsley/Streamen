@@ -2,7 +2,7 @@
 //  TVFixtureLogoCard.swift
 //  Streamen
 //
-//  The one tvOS fixture card, on the Home rail and in the hub: the phone's
+//  The tvOS Home rail's fixture card (the hub uses `TVFixtureScoreboardCard`): the phone's
 //  scoreboard card at 10 feet. Each side's crest and short name, its score big
 //  and heavy beside it, and the status between them (LIVE and the clock,
 //  Final, or the kickoff time), over the two clubs' colours. Focus is a scale

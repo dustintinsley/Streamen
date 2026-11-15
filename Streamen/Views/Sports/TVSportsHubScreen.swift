@@ -6,8 +6,8 @@
 //  read on a remote, so this is a purpose-built 10-foot screen: one scrolling
 //  page whose header is a row of league chips, a compact
 //  Yesterday / Today / Upcoming switch and an icon-only Manage Teams button,
-//  then full-width horizontal rails of `TVFixtureLogoCard`s, one focus section
-//  per group, over the sport's field (`SportsBackdrop`). The header scrolls with the page — a pinned bar over an unclipped
+//  then each group's `TVFixtureScoreboardCard`s in one column as on the Mac,
+//  one focus section per group, over the sport's field (`SportsBackdrop`). The header scrolls with the page — a pinned bar over an unclipped
 //  scroll view had the cards sliding underneath it. It shares the hub's data
 //  plumbing — `SportsStore` snapshots, `SportsFollowService` follows, off-main
 //  `SportsChannelResolver` — and reuses `SportsHubView`'s static date/assembly
@@ -223,45 +223,51 @@
 
         // MARK: - Sections
 
-        /// The heading matches `HomeRow`'s — subheadline, bold, secondary — so
-        /// the hub's rails read like every other rail on the tvOS Home.
+        /// As on the Mac: a bold heading with the competition's crest, then the
+        /// group's scoreboard cards one under another. The column is held to a
+        /// readable width in the middle of the screen, so a card's two sides sit
+        /// close to its score rather than at the far edges of the TV.
         private func section(for group: SportsFixtureGroup) -> some View {
-            VStack(alignment: .leading, spacing: 12) {
-                HStack(spacing: 10) {
+            VStack(alignment: .leading, spacing: 18) {
+                HStack(spacing: 12) {
                     if let logoURL = group.logoURL {
-                        CachedAsyncImage(url: logoURL, maxPixelSize: 40) { phase in
+                        CachedAsyncImage(url: logoURL, maxPixelSize: 72) { phase in
                             if case let .success(image) = phase {
                                 image.resizable().scaledToFit()
                             } else {
                                 Color.clear
                             }
                         }
-                        .frame(width: 22, height: 22)
+                        .frame(width: 36, height: 36)
                         .accessibilityHidden(true)
                     }
                     Text(verbatim: group.title)
-                        .font(.subheadline)
-                        .fontWeight(.bold)
-                        .foregroundStyle(.secondary)
+                        .font(.title3.weight(.bold))
+                        .foregroundStyle(.white)
+                        .lineLimit(1)
                 }
-                .padding(.horizontal, 60)
 
-                ScrollView(.horizontal, showsIndicators: false) {
-                    LazyHStack(spacing: 24) {
-                        ForEach(group.fixtures) { fixture in
-                            TVFixtureLogoCard(fixture: fixture, showsLeagueMark: !group.isSingleLeague) {
-                                selectedFixture = fixture
-                            }
-                            .focused($focus, equals: .card(fixture.id))
-                        }
-                    }
-                    .padding(.horizontal, 60)
-                    .padding(.vertical, 8)
+                ForEach(group.fixtures) { fixture in
+                    TVFixtureScoreboardCard(
+                        fixture: fixture,
+                        resolved: resolved[fixture.id] ?? [],
+                        isFollowed: isFollowed,
+                        showsLeagueMark: !group.isSingleLeague,
+                        showsDate: !group.isGroupedByDay,
+                        onSelect: { selectedFixture = fixture },
+                        onWatch: watch
+                    )
+                    .focused($focus, equals: .card(fixture.id))
                 }
-                .scrollClipDisabled()
             }
+            .frame(maxWidth: Self.columnWidth)
+            .frame(maxWidth: .infinity)
+            .padding(.horizontal, 60)
             .focusSection()
         }
+
+        /// The card column's width: about two thirds of a 1920pt screen.
+        private static let columnWidth: CGFloat = 1300
 
         // MARK: - States
 

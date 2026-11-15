@@ -17,6 +17,10 @@ struct EPGProgramDetailView: View {
     let now: Date
     let onPlay: () -> Void
     var onPlayCatchup: () -> Void = {}
+    /// Opens Multi-View with this channel (Streamen Pro gates it in the
+    /// host); nil leaves the button out. Shown on Apple TV, where holding a
+    /// programme opens these details rather than the channel's menu.
+    var onStartMultiView: (() -> Void)?
 
     @Environment(\.dismiss) private var dismiss
 
@@ -188,6 +192,13 @@ struct EPGProgramDetailView: View {
                                         onPlayCatchup()
                                         dismiss()
                                     }
+                                }
+                            }
+
+                            if let onStartMultiView {
+                                TVPlayButton(title: "Start Multi-View", systemImage: "rectangle.split.2x2") {
+                                    onStartMultiView()
+                                    dismiss()
                                 }
                             }
 

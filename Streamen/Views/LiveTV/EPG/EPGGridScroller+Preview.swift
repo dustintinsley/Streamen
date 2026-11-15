@@ -107,15 +107,18 @@
             preview.hero?.settleGlow(onLogo: row.logoURL)
         }
 
-        /// A Guide just built for another category, staying on the watched
-        /// channel, picks up the channel the previous Guide was playing —
-        /// even when this category doesn't list it — unless the channel last
-        /// watched full screen is here and differs.
+        /// A Guide just built for another category picks up the channel the
+        /// previous Guide was playing — even when this category doesn't list
+        /// it — so the picture carries on. Staying on the watched channel,
+        /// that's unless the channel last watched full screen is here and
+        /// differs; following focus, it's until focus rests on a channel.
         private func carryOverPreview() -> Bool {
-            guard !followsFocus, previewTarget == nil,
-                  let last = preview.controller?.lastTarget,
-                  watchingStreamID == nil || watchingStreamID == last.streamID
-            else { return false }
+            guard previewTarget == nil, let last = preview.controller?.lastTarget else { return false }
+            if followsFocus {
+                guard previewFocusedStreamID == nil else { return false }
+            } else {
+                guard watchingStreamID == nil || watchingStreamID == last.streamID else { return false }
+            }
             if let rowIndex = rows.firstIndex(where: { $0.id == last.streamID }) {
                 previewTarget = EPGPreviewTarget(row: rows[rowIndex], rowIndex: rowIndex, media: last.media)
             } else {

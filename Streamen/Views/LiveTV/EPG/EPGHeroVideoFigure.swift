@@ -22,8 +22,13 @@
 
         private let metrics = EPGMetrics.current
         @Environment(\.epgHeroLayout) private var layout
+        /// Runs the player outside the Guide when the Live TV screen offers it
+        /// (see `GuidePreviewTileHost`); this figure then only marks the slot.
+        @Environment(\.guidePreviewTileHost) private var tileHost
         @AppStorage(PlayerSettings.tvGuidePreviewSoundKey)
         private var playsSound = PlayerSettings.tvGuidePreviewSoundDefault
+        /// This figure's claims on the host, told apart from the next Guide's.
+        @State private var claimOwner = UUID()
 
         private var shape: RoundedRectangle {
             RoundedRectangle(cornerRadius: metrics.previewVideoCornerRadius, style: .continuous)
@@ -39,12 +44,61 @@
             .frame(width: layout.videoWidth, height: layout.height)
             .clipShape(shape)
             .overlay { shape.strokeBorder(.white.opacity(0.18), lineWidth: 1) }
-            .background { shape.fill(.black).shadow(color: .black.opacity(0.5), radius: 35, y: 30) }
+            .background {
+                // The hosted player draws its own plate behind the slot.
+                if !isHostedPlaying {
+                    shape.fill(.black).shadow(color: .black.opacity(0.5), radius: 35, y: 30)
+                }
+            }
+            .onGeometryChange(for: CGRect.self) { $0.frame(in: .named(GuidePreviewTileHost.space)) } action: { frame in
+                if tileHost?.slotFrame != frame { tileHost?.slotFrame = frame }
+            }
+            .onChange(of: claimKey, initial: true) { _, _ in
+                updateClaim()
+            }
+            .onDisappear {
+                tileHost?.releaseLater(owner: claimOwner)
+            }
+        }
+
+        /// The stream this figure should be showing, if any.
+        private var playingMedia: PlayableMedia? {
+            guard let target, !isFailed, isAllowed else { return nil }
+            return target.media
+        }
+
+        private var isHostedPlaying: Bool {
+            tileHost != nil && playingMedia != nil
+        }
+
+        /// Changes whenever the claim must: another channel, a restart, sound.
+        private var claimKey: String? {
+            guard let target, playingMedia != nil else { return nil }
+            return "\(target.streamID)-\(restartToken)-\(playsSound)"
+        }
+
+        private func updateClaim() {
+            guard let tileHost else { return }
+            guard let target, let media = playingMedia else {
+                tileHost.release(owner: claimOwner)
+                return
+            }
+            tileHost.claim(GuidePreviewTileHost.Claim(
+                key: "\(target.streamID)-\(restartToken)",
+                media: media,
+                isMuted: !playsSound,
+                handle: handle,
+                owner: claimOwner,
+                onFailure: onFailure
+            ))
         }
 
         @ViewBuilder
         private var content: some View {
-            if let target, !isFailed, isAllowed, let media = target.media {
+            if tileHost != nil, playingMedia != nil {
+                // The host's player shows through from behind.
+                Color.clear
+            } else if let target, !isFailed, isAllowed, let media = target.media {
                 ZStack {
                     Color.black
                     MultiViewTilePlayer(

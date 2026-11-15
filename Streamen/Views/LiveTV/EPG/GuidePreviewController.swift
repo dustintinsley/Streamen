@@ -18,6 +18,9 @@ final class GuidePreviewController {
         /// is rebuilt per category, so a preview that stays on the watched
         /// channel keeps it when the viewer moves to a category without it.
         var lastTarget: EPGPreviewTarget?
+        /// Runs the preview's player above the per-category Guide, so a
+        /// category change doesn't reconnect it.
+        let tileHost = GuidePreviewTileHost()
     #endif
     /// Bumped to reopen the Guide preview on a fresh stream.
     private(set) var restartToken = 0

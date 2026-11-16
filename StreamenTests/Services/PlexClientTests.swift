@@ -213,7 +213,7 @@ struct PlexClientTests {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [PlexStubProtocol.self]
         let client = try PlexClient(urlSession: URLSession(configuration: config), accountBaseURL: #require(URL(string: "http://\(host)")))
-        #expect(try await client.signIn(username: "bilipp", password: "test") == "acct-token")
+        #expect(try await client.signIn(username: "streamuser", password: "test") == "acct-token")
     }
 
     @Test func `a rejected sign-in surfaces as unauthorized`() async throws {
@@ -223,7 +223,7 @@ struct PlexClientTests {
         let config = URLSessionConfiguration.ephemeral
         config.protocolClasses = [PlexStubProtocol.self]
         let client = try PlexClient(urlSession: URLSession(configuration: config), accountBaseURL: #require(URL(string: "http://\(host)")))
-        let result = await failure { _ = try await client.signIn(username: "bilipp", password: "wrong") }
+        let result = await failure { _ = try await client.signIn(username: "streamuser", password: "wrong") }
         #expect(result == PlexError.unauthorized.logDescription)
     }
 

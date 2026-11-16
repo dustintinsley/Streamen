@@ -152,7 +152,7 @@ struct MediaServerOpenEndedLibraryTests {
 
     private func makePlaylist(container: ModelContainer, host: String) throws -> Playlist {
         let context = ModelContext(container)
-        let playlist = Playlist(name: "Test Jellyfin", serverURL: "http://\(host):8096", username: "bilipp", password: "test")
+        let playlist = Playlist(name: "Test Jellyfin", serverURL: "http://\(host):8096", username: "streamuser", password: "test")
         playlist.sourceType = MediaServerFlavor.jellyfin.sourceType
         context.insert(playlist)
         try context.save()

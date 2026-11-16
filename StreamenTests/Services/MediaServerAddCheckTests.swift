@@ -101,7 +101,7 @@ struct MediaServerAddCheckTests {
         return URLSession(configuration: config)
     }
 
-    private func input(url: String, username: String = "bilipp", password: String = "test") -> MediaServerAddCheck.Input {
+    private func input(url: String, username: String = "streamuser", password: String = "test") -> MediaServerAddCheck.Input {
         .init(url: url, username: username, password: password)
     }
 
@@ -477,7 +477,7 @@ struct MediaServerAddCheckTests {
     @Test func `the Plex failure copy matches the credential the user entered`() {
         let account = PlexAddCheck.message(
             for: PlexError.unauthorized,
-            input: .init(url: "http://nas:32400", username: "bilipp", password: "test"),
+            input: .init(url: "http://nas:32400", username: "streamuser", password: "test"),
             timedOut: false
         )
         #expect(account.localizedCaseInsensitiveContains("two-factor"))

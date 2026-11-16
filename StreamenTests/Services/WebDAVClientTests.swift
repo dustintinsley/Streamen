@@ -151,7 +151,7 @@ struct WebDAVClientTests {
 
         let resources = try await makeClient().list(
             #require(URL(string: "http://\(host)/Movies/")),
-            credentials: WebDAVCredentials(username: "bilipp", password: "test")
+            credentials: WebDAVCredentials(username: "streamuser", password: "test")
         )
 
         #expect(resources.count == 1)
@@ -165,7 +165,7 @@ struct WebDAVClientTests {
 
         _ = try await makeClient().list(
             #require(URL(string: "http://\(host)/Movies/")),
-            credentials: WebDAVCredentials(username: "bilipp", password: "test")
+            credentials: WebDAVCredentials(username: "streamuser", password: "test")
         )
 
         let recorded = try #require(WebDAVStubProtocol.recorded(host: host))
@@ -256,7 +256,7 @@ struct WebDAVClientTests {
 
         try await makeClient().probe(
             #require(URL(string: "http://\(host)/Movies/")),
-            credentials: WebDAVCredentials(username: "bilipp", password: "test")
+            credentials: WebDAVCredentials(username: "streamuser", password: "test")
         )
 
         let recorded = try #require(WebDAVStubProtocol.recorded(host: host))
@@ -282,7 +282,7 @@ struct WebDAVClientTests {
     /// `URLError` embeds the failing URL — which for WebDAV can carry userinfo.
     @Test func `a network error's log description drops the failing URL`() {
         let underlying = NSError(domain: NSURLErrorDomain, code: NSURLErrorTimedOut, userInfo: [
-            NSURLErrorFailingURLStringErrorKey: "http://bilipp:hunter2@nas.local/Movies/"
+            NSURLErrorFailingURLStringErrorKey: "http://streamuser:hunter2@nas.local/Movies/"
         ])
 
         let description = WebDAVError.networkError(underlying).logDescription

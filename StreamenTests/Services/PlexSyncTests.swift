@@ -344,7 +344,7 @@ struct PlexSyncTests {
             accountBaseURL: #require(URL(string: "http://\(accountHost)"))
         )
         let container = try makeTestContainer()
-        let playlist = try makePlaylist(container: container, host: host, username: "bilipp", password: "test")
+        let playlist = try makePlaylist(container: container, host: host, username: "streamuser", password: "test")
         try await ContentSyncManager(modelContainer: container, plexClient: client).syncPlaylist(playlist)
 
         let context = ModelContext(container)
@@ -379,7 +379,7 @@ struct PlexSyncTests {
             accountBaseURL: #require(URL(string: "http://\(accountHost)"))
         )
         let container = try makeTestContainer()
-        let playlist = try makePlaylist(container: container, host: host, token: "revoked", username: "bilipp", password: "test")
+        let playlist = try makePlaylist(container: container, host: host, token: "revoked", username: "streamuser", password: "test")
         try await ContentSyncManager(modelContainer: container, plexClient: client).syncPlaylist(playlist)
 
         let context = ModelContext(container)

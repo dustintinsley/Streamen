@@ -7,7 +7,7 @@ struct PlayableMediaTests {
         Playlist(name: "Test", serverURL: "http://example.com:8080", username: "user", password: "pass")
     }
 
-    private func makeWebDAVPlaylist(username: String = "bilipp", password: String = "test") -> Playlist {
+    private func makeWebDAVPlaylist(username: String = "streamuser", password: String = "test") -> Playlist {
         Playlist(name: "NAS", webdavURL: "http://192.168.0.2:30035/Movies/", username: username, password: password)
     }
 

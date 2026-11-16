@@ -145,7 +145,7 @@ struct MediaServerSyncTests {
         let context = ModelContext(container)
         let playlist = Playlist(
             name: "Test \(flavor.displayName)", serverURL: "http://\(host):8096",
-            username: "bilipp", password: "test"
+            username: "streamuser", password: "test"
         )
         playlist.sourceType = flavor.sourceType
         context.insert(playlist)

@@ -101,7 +101,7 @@ struct MediaServerShowEpisodesTests {
 
     private func makePlaylist(container: ModelContainer, host: String) throws -> Playlist {
         let context = ModelContext(container)
-        let playlist = Playlist(name: "AIOStreams", serverURL: "http://\(host)", username: "bilipp", password: "test")
+        let playlist = Playlist(name: "AIOStreams", serverURL: "http://\(host)", username: "streamuser", password: "test")
         playlist.sourceType = .jellyfin
         context.insert(playlist)
         try context.save()

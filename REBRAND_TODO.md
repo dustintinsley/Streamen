@@ -1,80 +1,33 @@
 # Streamen rebrand — follow-ups
 
-The Lume → Streamen rename (branch `dustin-custom-v2` in all four repos) replaced
-`bilipp.` → `hardheaded.`, `Lume` → `Streamen`, `lume` → `streamen` and
-`LUME` → `STREAMEN`. The references below were **kept on purpose** because they
-point at services and repos that live outside these repos. Renaming them before
-replacements exist would break sync, downloads or links.
+Streamen is a fork. The rename (branch `dustin-custom-v2` in all four repos)
+replaced the upstream project's name and bundle prefix with Streamen's and
+`hardheaded.`. The goal is no trace of the upstream name anywhere. What's still
+open is listed below.
 
-Find them all with:
+## Still open
 
-```bash
-git grep -nE 'getlume\.org|bilipp/|ghcr\.io/bilipp'
-```
-
-## External references to change later
-
-| What | Where | Why it was kept |
-|------|-------|-----------------|
-| `cloud.getlume.org`, `cloud-staging.getlume.org` | Done | `StreamenCloudAPI.officialURL` is now `https://cloud.streamen.app`; `stagingURL` and the wrangler staging route use `cloud-staging.streamen.app`, which doesn't exist yet. Only the fixed test vectors in `spec/vectors/` still mention getlume. |
-| `getlume.org` (privacy page, `/recorder`) | Done in Streamen and StreamenDVR CI | Now `https://streamen.app/privacy.htm` and `https://streamen.app/dvr.htm`; both pages need to exist on the site. |
-| App Store ID `6779551584` | Done | Now Streamen's own ID `6832292870` in `SupportInfo` and the README. |
-| `github.com/bilipp/LumeEngine/releases/download/…` | StreamenEngine `Package.swift` | Where the prebuilt `FFmpeg.xcframework` downloads from. Needs a release on `dustintinsley/StreamenEngine` (or a local FFmpeg build) first. |
-| `lume_*` C helpers and the `lume_ffmpeg/` header folder | StreamenEngine `build/support/`, `build/scripts/make-xcframework.sh`, and the Swift files that call them | These names are compiled into the prebuilt FFmpeg download above. Rename them only together with building your own `FFmpeg.xcframework`. |
-| `ghcr.io/bilipp/lumerecorder` | Done | `docker-compose.yml` builds `streamen-dvr:latest` locally; CI publishes `ghcr.io/dustintinsley/streamen-dvr` on release tags (none published yet). |
-| `github.com/bilipp/Lume*` links, `bilipp/Lume*` repo names | Done | Repos renamed to `dustintinsley/Streamen`, `StreamenEngine`, `StreamenDVR`, `StreamenCloud`; links and the sideload workflow updated. Kept: the engine's FFmpeg download and upstream issue `bilipp/LumeEngine#45`. |
-| `bilipp/LumeAndroid` | StreamenCloud docs | Upstream Android app; no fork exists. |
-
-## FFmpeg binary: upstream v0.5.0 (done)
-
-AetherEngine's Dolby Vision library ships its own `module.modulemap`, which
-collided with the one at the `Headers/` root of upstream's v0.3.0
-`FFmpeg.xcframework`. Upstream's v0.5.0 artifact puts it under
-`Headers/CFFmpeg/`, so the two no longer collide, and `Package.swift` downloads
-it (checksum-pinned). It also has visionOS slices. Verified 2026-11-11: all
-three platforms build and StreamenEngine plays on it. The hand-patched v0.3.0
-copy in `StreamenEngine/BinaryDependencies/` is deleted; that folder now only
-holds a locally built xcframework when someone runs `make-xcframework.sh`, and
-`Package.swift` prefers it when present.
-
-Still open: the download comes from `bilipp/LumeEngine`. Building our own with
-`build/scripts/make-xcframework.sh` and publishing it on
-`dustintinsley/StreamenEngine` is the same step the `lume_*` rename below needs.
+| What | Where | What it needs |
+|------|-------|---------------|
+| Prebuilt `FFmpeg.xcframework` download | StreamenEngine `Package.swift` (`ffmpegArtifactURL`) | It still downloads upstream's checksum-pinned v0.5.0 release. Build our own with `build/scripts/make-xcframework.sh` and publish it as a release on `dustintinsley/StreamenEngine`, then point the URL and checksum at it. |
+| C helper prefix and header folder | StreamenEngine `build/support/`, `build/scripts/make-xcframework.sh`, `Package.swift` and the Swift files that call the helpers | The helpers' prefix and the nested FFmpeg header folder are baked into the prebuilt download above. Rename them in the same step as building our own `FFmpeg.xcframework`; until then the names must match the binary. |
+| Default branch | GitHub, all four repos | The forks' default branch is still `main` (upstream content), so a plain `git clone` and `blob/main` links show upstream. Consider making `dustin-custom-v2` the default. |
+| Discord invite | `README.md` | Check that `discord.gg/DMnQfr69Ug` is Streamen's own server, not the upstream community's. |
 
 If a build keeps using an old binary, clear
 `~/Library/Caches/org.swift.swiftpm/manifests` and the engine's folder under the
-shared package cache's `artifacts/`, then resolve packages again.
+shared package cache's `artifacts/` (`~/Library/Developer/Streamen-SharedSPM`),
+then resolve packages again.
 
-## Goal: remove every remaining "Lume"
+Note for future upstream merges: upstream keeps its own names, so merge through
+a rebranded copy of upstream (rebrand script on a branch, then merge it), and
+check the merge didn't bring the old names back.
 
-The goal is no reference to "Lume" left anywhere, not just in the app. What's
-still there, and what each needs:
+## Licenses
 
-- **FFmpeg helpers** (StreamenEngine): the `lume_*` C functions and the
-  `lume_ffmpeg/` header folder. Rename them in `build/support/`,
-  `build/scripts/make-xcframework.sh`, `Package.swift` and the Swift files that
-  call them, then build our own `FFmpeg.xcframework` and publish it as a release
-  on our engine repo (and point `ffmpegArtifactURL`/checksum at it). Until then
-  the names must match upstream's binary.
-- **GitHub repos**: renamed (2026-11-09). Each local clone's `origin` still
-  uses the old name (GitHub redirects it); update with
-  `git remote set-url origin https://github.com/dustintinsley/<Name>.git`.
-  The forks' default branch is still `main` (upstream content), so plain
-  `git clone` and `blob/main` links show upstream; consider making
-  `dustin-custom-v2` the default. Left alone on purpose: the upstream issue
-  `bilipp/LumeEngine#45` in `StreamenEngineFailure.swift` and the StreamenCloud
-  `bilipp/LumeAndroid` docs.
-- **License / notice files** (StreamenEngine `LICENSE`, `THIRD-PARTY-NOTICES.md`):
-  skipped by the rebrand script. The project name and paths in them can change
-  (`Tests/LumeEngineCoreTests/...` no longer exists); keep the license terms and
-  the original copyright line intact.
-- **Upstream links and services**: done.
-- **Local only**: the shared package cache `~/Library/Developer/Lume-SharedSPM`
-  used in build commands. It can simply be renamed.
-
-Note for future upstream merges: upstream keeps using the Lume names, so merge
-through a rebranded copy of upstream (rebrand script on a branch, then merge
-it), and check the merge didn't flip names we kept on purpose.
+Keep the license terms and the original author's copyright lines intact
+(StreamenEngine `LICENSE` and `THIRD-PARTY-NOTICES.md`; Streamen is AGPL-3.0).
+Only the project names and paths in those files were changed.
 
 ## Apple Developer account setup
 
@@ -94,8 +47,7 @@ them before signing a build that uses them:
 ## Other things to know
 
 - User defaults, keychain and store-file names were renamed too, so Streamen
-  starts fresh and doesn't read data saved by an installed Lume.
-- License and third-party notice files were left untouched.
+  starts fresh and doesn't read data saved by an installed copy of the upstream app.
 - The in-app Acknowledgements screen was removed (2026-11-07). Before any
   public release, add a small "Legal & Licenses" entry back: Streamen's AGPL
   notice and source link, the GPL/LGPL libraries (KSPlayer, FFmpegKit, VLCKit,

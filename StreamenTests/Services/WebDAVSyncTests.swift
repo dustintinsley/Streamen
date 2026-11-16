@@ -150,7 +150,7 @@ struct WebDAVSyncTests {
 
     private func makePlaylist(container: ModelContainer, url: String) throws -> Playlist {
         let context = ModelContext(container)
-        let playlist = Playlist(name: "Test WebDAV", webdavURL: url, username: "bilipp", password: "test")
+        let playlist = Playlist(name: "Test WebDAV", webdavURL: url, username: "streamuser", password: "test")
         context.insert(playlist)
         try context.save()
         return playlist

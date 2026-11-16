@@ -309,7 +309,7 @@ final nonisolated class PerfWALGrowthMetric: NSObject, XCTMetric {
         to _: XCTPerformanceMeasurementTimestamp
     ) throws -> [XCTPerformanceMeasurement] {
         [XCTPerformanceMeasurement(
-            identifier: "org.getlume.perf.walGrowth",
+            identifier: "com.hardheaded.streamen.perf.walGrowth",
             displayName: "WAL Growth",
             doubleValue: Double(sizeAtEnd - sizeAtStart) / 1024,
             unitSymbol: "kB",

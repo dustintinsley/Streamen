@@ -139,7 +139,7 @@ struct JellyfinClientTests {
         """))
 
         let server = server(host)
-        let session = try await makeClient().authenticate(server: server, username: "bilipp", password: "test")
+        let session = try await makeClient().authenticate(server: server, username: "streamuser", password: "test")
 
         #expect(session.accessToken == "tok123")
         #expect(session.userId == "user1")
@@ -149,7 +149,7 @@ struct JellyfinClientTests {
         // Jellyfin 10.12+ with legacy auth disabled only accepts this form —
         // the `X-Emby-Authorization` variant answers 400 there.
         #expect(recorded.authorization?.hasPrefix("MediaBrowser Client=\"Streamen\"") == true)
-        #expect(recorded.body?.contains("\"Username\":\"bilipp\"") == true)
+        #expect(recorded.body?.contains("\"Username\":\"streamuser\"") == true)
         #expect(recorded.body?.contains("\"Pw\":\"test\"") == true)
     }
 
@@ -158,7 +158,7 @@ struct JellyfinClientTests {
         JellyfinStubProtocol.register(host: host, path: "/Users/AuthenticateByName", stub: .init(status: 401, body: ""))
 
         let result = await failure {
-            _ = try await makeClient().authenticate(server: server(host), username: "bilipp", password: "wrong")
+            _ = try await makeClient().authenticate(server: server(host), username: "streamuser", password: "wrong")
         }
         #expect(result == JellyfinError.unauthorized.logDescription)
     }
@@ -294,7 +294,7 @@ struct JellyfinClientTests {
     @Test func `a jellyfin movie plays through the token-free stream URL with a header`() throws {
         let playlist = Playlist(
             name: "JF", mediaServerURL: "http://jellyfin.test:8096", flavor: .jellyfin,
-            username: "bilipp", password: "test", accessToken: "tok", userId: "user1"
+            username: "streamuser", password: "test", accessToken: "tok", userId: "user1"
         )
         let movie = Movie(id: "p-jellyfin-abc", streamId: 1, name: "Arrival")
         movie.directURL = "http://jellyfin.test:8096/Videos/abc/stream?Static=true"
@@ -307,7 +307,7 @@ struct JellyfinClientTests {
     @Test func `a jellyfin episode takes the direct-source path`() throws {
         let playlist = Playlist(
             name: "JF", mediaServerURL: "http://jellyfin.test:8096", flavor: .jellyfin,
-            username: "bilipp", password: "test", accessToken: "tok", userId: "user1"
+            username: "streamuser", password: "test", accessToken: "tok", userId: "user1"
         )
         let episode = Episode(
             id: "e-1", episodeId: "ep1", title: "Pilot", containerExtension: "mkv",

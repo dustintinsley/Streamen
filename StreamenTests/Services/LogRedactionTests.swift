@@ -45,15 +45,15 @@ struct LogRedactionTests {
     }
 
     @Test func `strips webdav userinfo credentials`() {
-        let message = "VLC open failed for http://bilipp:test@192.168.178.114:30035/Movies/Show.S01E01.mkv"
+        let message = "VLC open failed for http://streamuser:test@192.168.178.114:30035/Movies/Show.S01E01.mkv"
         let scrubbed = LogRedaction.scrubURLs(in: message)
         #expect(scrubbed == "VLC open failed for http://<redacted>")
-        #expect(!scrubbed.contains("bilipp"))
+        #expect(!scrubbed.contains("streamuser"))
         #expect(!scrubbed.contains("test@"))
     }
 
     @Test func `strips basic auth header value`() {
-        let token = Data("bilipp:test".utf8).base64EncodedString()
+        let token = Data("streamuser:test".utf8).base64EncodedString()
         let scrubbed = LogRedaction.scrubURLs(in: "request headers: Authorization: Basic \(token)")
         #expect(scrubbed == "request headers: Authorization: Basic <redacted>")
         #expect(!scrubbed.contains(token))

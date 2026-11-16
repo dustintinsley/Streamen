@@ -17,10 +17,6 @@ Browse, search, and stream your Xtream Codes or **M3U/M3U8** playlists with a cl
 <a href="https://discord.gg/DMnQfr69Ug">
   <img src="https://img.shields.io/badge/Join_the_Community-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Join the Streamen Discord" height="48">
 </a>
-&nbsp;&nbsp;
-<a href="https://github.com/sponsors/bilipp">
-  <img src="https://img.shields.io/badge/Sponsor_on_GitHub-EA4AAA?style=for-the-badge&logo=githubsponsors&logoColor=white" alt="Sponsor Streamen on GitHub" height="48">
-</a>
 
 <br><br>
 
@@ -526,7 +522,7 @@ Planned features and enhancements are tracked as
 <div align="center">
 
 <a href="https://discord.gg/DMnQfr69Ug">
-  <img src="https://img.shields.io/badge/Join_the_Lume_Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Join the Streamen Discord" height="44">
+  <img src="https://img.shields.io/badge/Join_the_Streamen_Discord-5865F2?style=for-the-badge&logo=discord&logoColor=white" alt="Join the Streamen Discord" height="44">
 </a>
 
 ### [discord.gg/DMnQfr69Ug](https://discord.gg/DMnQfr69Ug)

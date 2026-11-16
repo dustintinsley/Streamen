@@ -19,10 +19,10 @@ import Testing
 @MainActor
 struct WebDAVAddCheckTests {
     private let localInput = WebDAVAddCheck.Input(
-        url: "http://192.168.178.114:30035/Movies/", username: "bilipp", password: "test"
+        url: "http://192.168.178.114:30035/Movies/", username: "streamuser", password: "test"
     )
     private let remoteInput = WebDAVAddCheck.Input(
-        url: "https://dav.example.com/media/", username: "bilipp", password: "test"
+        url: "https://dav.example.com/media/", username: "streamuser", password: "test"
     )
 
     private func message(_ error: Error, input: WebDAVAddCheck.Input, timedOut: Bool = false) -> String {

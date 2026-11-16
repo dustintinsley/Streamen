@@ -18,21 +18,21 @@ struct HTTPBasicCredentialsTests {
     }
 
     @Test func `decodes a basic header`() {
-        let decoded = HTTPBasicCredentials.decode(Self.header(user: "bilipp", password: "test"))
-        #expect(decoded?.user == "bilipp")
+        let decoded = HTTPBasicCredentials.decode(Self.header(user: "streamuser", password: "test"))
+        #expect(decoded?.user == "streamuser")
         #expect(decoded?.password == "test")
     }
 
     @Test func `decodes a password containing a colon`() {
-        let decoded = HTTPBasicCredentials.decode(Self.header(user: "bilipp", password: "a:b:c"))
-        #expect(decoded?.user == "bilipp")
+        let decoded = HTTPBasicCredentials.decode(Self.header(user: "streamuser", password: "a:b:c"))
+        #expect(decoded?.user == "streamuser")
         #expect(decoded?.password == "a:b:c")
     }
 
     @Test func `builds a userinfo MRL`() throws {
         let url = try #require(URL(string: "http://192.168.178.114:30035/Movies/Show.mkv"))
-        let mrl = HTTPBasicCredentials.authenticatedURL(url, headers: Self.header(user: "bilipp", password: "test"))
-        #expect(mrl?.absoluteString == "http://bilipp:test@192.168.178.114:30035/Movies/Show.mkv")
+        let mrl = HTTPBasicCredentials.authenticatedURL(url, headers: Self.header(user: "streamuser", password: "test"))
+        #expect(mrl?.absoluteString == "http://streamuser:test@192.168.178.114:30035/Movies/Show.mkv")
     }
 
     @Test func `preserves existing percent encoding in the path`() throws {

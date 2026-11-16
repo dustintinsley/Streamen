@@ -26,7 +26,7 @@ final class MediaServerPlaylistFlowTests: XCTestCase {
         let app = XCUIApplication()
         launchAndOpenAddForm(app)
         selectMediaServerSegment(app)
-        fillMediaServerForm(app, url: unreachableShare, username: "bilipp", password: "test")
+        fillMediaServerForm(app, url: unreachableShare, username: "streamuser", password: "test")
         submit(app)
 
         // A declined local-network prompt is indistinguishable from an

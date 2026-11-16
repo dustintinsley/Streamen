@@ -2,7 +2,7 @@ import StreamenEngine
 
 /// Why a StreamenEngine stream stopped, read from the engine's typed error.
 ///
-/// The engine only classifies (bilipp/LumeEngine#45); what each cause gets —
+/// The engine only classifies; what each cause gets —
 /// a fresh stream URL, a slower reconnect, no reconnect at all — is Streamen's
 /// call, made by the player views.
 nonisolated enum StreamenEngineFailure: String, EngineFailurePolicy {

@@ -15,7 +15,7 @@ set -uo pipefail
 
 root="$(git rev-parse --show-toplevel)"
 cd "$root" || exit 1
-packages=~/Library/Developer/Lume-SharedSPM
+packages=~/Library/Developer/Streamen-SharedSPM
 logs="$(mktemp -d -t streamen-check)"
 
 destination() {

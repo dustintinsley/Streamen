@@ -2,10 +2,9 @@
 //  LegalLicenses.swift
 //  Streamen
 //
-//  Settings › About › Legal & Licenses: Streamen's own licence and source
-//  link, and the open-source players and media stack the app ships with
-//  (KSPlayer, VLCKit, FFmpeg), each with its licence and where its source
-//  lives. TMDB's credit stays in the About group itself (`TMDBAttribution`).
+//  Settings › About › Legal & Licenses: the open-source players and media
+//  stack the app ships with (KSPlayer, VLCKit, FFmpeg), each with its
+//  licence and where its source lives. TMDB's credit stays in the About group itself (`TMDBAttribution`).
 //  It is a screen of its own behind About, except in the Mac Settings
 //  window, where it sits under About in the About tab; on Apple TV, which can't open a link,
 //  it is read-only rows in the About pane.
@@ -35,12 +34,6 @@ nonisolated enum LegalInfo {
         }
     }
 
-    static let streamen = Component(
-        name: "Streamen",
-        license: "GNU AGPL v3",
-        urlString: "https://github.com/dustintinsley/Streamen"
-    )
-
     static let components: [Component] = [
         Component(name: "KSPlayer", license: "GPL v3", urlString: "https://github.com/kingslay/KSPlayer"),
         Component(name: "VLCKit", license: "LGPL v2.1", urlString: "https://code.videolan.org/videolan/VLCKit"),
@@ -54,14 +47,6 @@ nonisolated enum LegalInfo {
     /// Settings window's About tab.
     struct LegalLicensesSections: View {
         var body: some View {
-            Section {
-                LegalComponentRow(component: LegalInfo.streamen)
-            } header: {
-                Text("Streamen")
-            } footer: {
-                Text("Streamen is free, open-source software, licensed under the GNU Affero General Public License v3. Its source code is on GitHub.")
-            }
-
             Section {
                 ForEach(LegalInfo.components) { component in
                     LegalComponentRow(component: component)
@@ -117,12 +102,11 @@ nonisolated enum LegalInfo {
             VStack(alignment: .leading, spacing: 12) {
                 TVSettingsSectionLabel("Legal & Licenses")
                 VStack(spacing: 2) {
-                    TVLegalRow(component: LegalInfo.streamen)
                     ForEach(LegalInfo.components) { component in
                         TVLegalRow(component: component)
                     }
                 }
-                Text("Streamen is free, open-source software under the GNU AGPL v3. It is built on the open-source projects above, each under its own license, with its source code at the address shown. FFmpeg is a trademark of Fabrice Bellard.")
+                Text("Streamen's players are built on these open-source projects. Each remains under its own license, with its source code at the address shown. FFmpeg is a trademark of Fabrice Bellard.")
                     .font(.system(size: 20))
                     .foregroundStyle(.secondary)
                     .padding(.horizontal, TVSettingsMetrics.rowHPadding)

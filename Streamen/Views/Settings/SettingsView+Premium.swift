@@ -122,6 +122,8 @@ extension SettingsView {
             @State private var premium = PremiumManager.shared
             /// Force-recompute counter the For You row watches.
             @AppStorage(RecommendationSettings.manualRecalculationKey) private var recommendationsRecalcToken = 0
+            @State private var schemaStatus: String?
+            @State private var isInitializingSchema = false
 
             var body: some View {
                 SettingsList {
@@ -138,8 +140,51 @@ extension SettingsView {
                     } footer: {
                         Text("DEBUG only. Force Pro previews the free tier and paywall. Recalculate rebuilds the For You row now, bypassing the once-a-day throttle.")
                     }
+
+                    Section {
+                        Button {
+                            initializeCloudKitSchema()
+                        } label: {
+                            HStack {
+                                Text(verbatim: "Initialize CloudKit Schema")
+                                if isInitializingSchema {
+                                    Spacer()
+                                    ProgressView().controlSize(.small)
+                                }
+                            }
+                        }
+                        .disabled(isInitializingSchema)
+                        if let schemaStatus {
+                            Text(verbatim: schemaStatus)
+                                .font(.caption)
+                                .foregroundStyle(.secondary)
+                                .textSelection(.enabled)
+                        }
+                    } header: {
+                        Text(verbatim: "iCloud")
+                    } footer: {
+                        Text(verbatim: "Writes every synced record type to the CloudKit Development environment, ready to deploy to Production in the CloudKit Console. Needs a signed-in iCloud account.")
+                    }
                 }
                 .platformNavigationTitle("Developer")
+            }
+
+            private func initializeCloudKitSchema() {
+                isInitializingSchema = true
+                schemaStatus = "Uploading the schema to CloudKit Development…"
+                Task {
+                    let result = await Task.detached { () -> String in
+                        do {
+                            try CloudKitSchemaInitializer.run()
+                            let names = CloudKitSchemaInitializer.recordTypeNames.joined(separator: ", ")
+                            return "Done. Record types: \(names)"
+                        } catch {
+                            return "Failed: \(error.localizedDescription)"
+                        }
+                    }.value
+                    schemaStatus = result
+                    isInitializingSchema = false
+                }
             }
         }
     #endif

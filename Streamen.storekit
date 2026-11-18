@@ -107,7 +107,7 @@
 
           ],
           "displayPrice" : "0.99",
-          "familyShareable" : true,
+          "familyShareable" : false,
           "groupNumber" : 1,
           "internalID" : "5002",
           "introductoryOffers" : [

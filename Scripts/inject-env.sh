@@ -76,14 +76,14 @@ else
     echo "warning: OPENSUBTITLES_API_KEY not set in .env — subtitle search will be hidden"
 fi
 
+# Trakt needs only the public Client ID: the device flow, refresh and revoke
+# take no client secret, which Trakt deprecates for apps.
 TRAKT_CLIENT_ID="$(read_env TRAKT_CLIENT_ID)"
-TRAKT_CLIENT_SECRET="$(read_env TRAKT_CLIENT_SECRET)"
-if [ -n "$TRAKT_CLIENT_ID" ] && [ -n "$TRAKT_CLIENT_SECRET" ]; then
+if [ -n "$TRAKT_CLIENT_ID" ]; then
     set_plist TraktClientID "$TRAKT_CLIENT_ID"
-    set_plist TraktClientSecret "$TRAKT_CLIENT_SECRET"
-    echo "Injected Trakt credentials into Info.plist"
+    echo "Injected TRAKT_CLIENT_ID into Info.plist"
 else
-    echo "warning: TRAKT_CLIENT_ID/SECRET not set in .env — Trakt integration will be hidden"
+    echo "warning: TRAKT_CLIENT_ID not set in .env — Trakt integration will be hidden"
 fi
 
 SIMKL_CLIENT_ID="$(read_env SIMKL_CLIENT_ID)"

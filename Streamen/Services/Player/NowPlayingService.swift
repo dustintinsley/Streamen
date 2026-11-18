@@ -91,6 +91,7 @@ final class NowPlayingService {
         channelEPG = nil
         artwork = nil
         PlaybackResumeStore.save(media)
+        TraktScrobbler.shared.begin(media: media, container: container)
         registerCommands(for: media)
         publish()
 
@@ -107,6 +108,7 @@ final class NowPlayingService {
     /// position so `streamen://resume` can reopen where playback left off even
     /// after the session is gone.
     func endSession() {
+        TraktScrobbler.shared.finish(clock: clock)
         if let media = currentMedia {
             let position = clock?.current ?? 0
             PlaybackResumeStore.save(
@@ -363,6 +365,7 @@ final class NowPlayingService {
             try? await Task.sleep(for: .seconds(1))
             guard !Task.isCancelled, let clock else { return }
             let playing = transport?.isPlaying() ?? lastPlaying
+            TraktScrobbler.shared.update(playing: playing, clock: clock)
             let wallDelta = Date.now.timeIntervalSince(lastWall)
             let expected = lastElapsed + (lastPlaying ? wallDelta : 0)
             let drifted = abs(clock.current - expected) > 3

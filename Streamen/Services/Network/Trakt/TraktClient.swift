@@ -54,8 +54,14 @@ nonisolated struct TraktClient {
     private static let pageWalkLimit = 200
 
     private let session: URLSession
+    /// The app's public Client ID — the only credential the app ships with.
+    /// Trakt's device flow, refresh and revoke need no client secret, which
+    /// Trakt deprecates for apps (it can be pulled out of any shipped binary).
     private let clientID: String?
-    private let clientSecret: String?
+
+    /// The redirect URI registered on the Trakt app, sent on refresh, where
+    /// Trakt requires an exact match. The device flow never redirects to it.
+    static let redirectURI = "https://streamen.app/trakt/callback"
 
     /// The pre-filled activation URL the user opens to approve a device code.
     static func activationURL(for userCode: String) -> URL? {
@@ -64,20 +70,16 @@ nonisolated struct TraktClient {
 
     init(
         session: URLSession = .shared,
-        clientID: String? = TraktClient.value(for: "TraktClientID"),
-        clientSecret: String? = TraktClient.value(for: "TraktClientSecret")
+        clientID: String? = TraktClient.value(for: "TraktClientID")
     ) {
         self.session = session
         self.clientID = clientID
-        self.clientSecret = clientSecret
     }
 
-    /// Whether usable credentials are present. When false the whole integration
+    /// Whether a usable Client ID is present. When false the whole integration
     /// is hidden rather than surfacing errors.
     var isConfigured: Bool {
-        guard let clientID, !clientID.isEmpty, !clientID.hasPrefix("$("),
-              let clientSecret, !clientSecret.isEmpty, !clientSecret.hasPrefix("$(")
-        else { return false }
+        guard let clientID, !clientID.isEmpty, !clientID.hasPrefix("$(") else { return false }
         return true
     }
 
@@ -98,11 +100,10 @@ nonisolated struct TraktClient {
     /// Polls once for the token. Maps Trakt's documented polling status codes to
     /// typed errors so `TraktService` can drive the loop.
     func pollForToken(deviceCode: String) async throws -> TraktTokenResponse {
-        guard let clientID, let clientSecret, isConfigured else { throw TraktError.notConfigured }
+        guard let clientID, isConfigured else { throw TraktError.notConfigured }
         let body = [
             "code": deviceCode,
-            "client_id": clientID,
-            "client_secret": clientSecret
+            "client_id": clientID
         ]
         do {
             return try await post("/oauth/device/token", body: body, authorized: false)
@@ -121,12 +122,11 @@ nonisolated struct TraktClient {
 
     /// Exchanges a refresh token for a fresh token set.
     func refreshToken(_ refreshToken: String) async throws -> TraktTokenResponse {
-        guard let clientID, let clientSecret, isConfigured else { throw TraktError.notConfigured }
+        guard let clientID, isConfigured else { throw TraktError.notConfigured }
         let body = [
             "refresh_token": refreshToken,
             "client_id": clientID,
-            "client_secret": clientSecret,
-            "redirect_uri": "streamen://oauth",
+            "redirect_uri": Self.redirectURI,
             "grant_type": "refresh_token"
         ]
         return try await post("/oauth/token", body: body, authorized: false)
@@ -135,11 +135,10 @@ nonisolated struct TraktClient {
     /// Revokes the access token server-side. Best-effort: failures are ignored
     /// by the caller since the local token is cleared regardless.
     func revokeToken(_ accessToken: String) async throws {
-        guard let clientID, let clientSecret, isConfigured else { throw TraktError.notConfigured }
+        guard let clientID, isConfigured else { throw TraktError.notConfigured }
         let body = [
             "token": accessToken,
-            "client_id": clientID,
-            "client_secret": clientSecret
+            "client_id": clientID
         ]
         let _: EmptyResponse = try await post("/oauth/revoke", body: body, authorized: false)
     }
@@ -154,14 +153,26 @@ nonisolated struct TraktClient {
 
     // MARK: - Watched history
 
-    /// Adds movies/episodes to the user's watched history.
-    func addToHistory(_ items: TraktSyncItems, accessToken: String) async throws {
-        let _: TraktSyncResponse = try await post("/sync/history", body: items, accessToken: accessToken)
+    /// Adds movies/episodes to the user's watched history. Trakt answers 201
+    /// even when it can't match an id; the summary says what it took.
+    @discardableResult
+    func addToHistory(_ items: TraktSyncItems, accessToken: String) async throws -> TraktSyncResponse {
+        try await post("/sync/history", body: items, accessToken: accessToken)
     }
 
     /// Removes movies/episodes from the user's watched history.
-    func removeFromHistory(_ items: TraktSyncItems, accessToken: String) async throws {
-        let _: TraktSyncResponse = try await post("/sync/history/remove", body: items, accessToken: accessToken)
+    @discardableResult
+    func removeFromHistory(_ items: TraktSyncItems, accessToken: String) async throws -> TraktSyncResponse {
+        try await post("/sync/history/remove", body: items, accessToken: accessToken)
+    }
+
+    // MARK: - Scrobble
+
+    /// Tells Trakt playback started, paused or stopped at `item.progress`
+    /// percent. Start shows the title as watching now; pause saves the
+    /// position as in progress; stop at 80% or more adds it to the history.
+    func scrobble(_ action: TraktScrobbleAction, item: TraktScrobbleBody, accessToken: String) async throws {
+        let _: EmptyResponse = try await post("/scrobble/\(action.rawValue)", body: item, accessToken: accessToken)
     }
 
     // MARK: - Watchlist
@@ -378,6 +389,40 @@ struct TraktMoviePayload: Encodable {
     let ids: TraktIDs
 }
 
+enum TraktScrobbleAction: String {
+    case start, pause, stop
+}
+
+/// Body for `/scrobble/*`: a movie, or a show plus its episode, and the
+/// progress in percent. The absent side is left out of the JSON.
+struct TraktScrobbleBody: Encodable {
+    struct ShowRef: Encodable {
+        let ids: TraktIDs
+    }
+
+    struct EpisodeRef: Encodable {
+        let season: Int
+        let number: Int
+    }
+
+    var movie: TraktMoviePayload?
+    var show: ShowRef?
+    var episode: EpisodeRef?
+    var progress: Double
+
+    static func movie(tmdbID: Int, progress: Double) -> TraktScrobbleBody {
+        TraktScrobbleBody(movie: TraktMoviePayload(ids: TraktIDs(tmdb: tmdbID)), progress: progress)
+    }
+
+    static func episode(showTMDBID: Int, season: Int, episode: Int, progress: Double) -> TraktScrobbleBody {
+        TraktScrobbleBody(
+            show: ShowRef(ids: TraktIDs(tmdb: showTMDBID)),
+            episode: EpisodeRef(season: season, number: episode),
+            progress: progress
+        )
+    }
+}
+
 struct TraktEpisodeNumber: Encodable {
     let number: Int
 }
@@ -426,7 +471,43 @@ struct TraktSyncItems: Encodable {
     }
 }
 
-private struct TraktSyncResponse: Decodable {} // We don't act on the add/remove summary.
+/// The add/remove summary: how many items Trakt took, and which ids it
+/// couldn't match. Every field is optional so an unexpected shape never
+/// turns a successful sync into a decoding error.
+struct TraktSyncResponse: Decodable {
+    struct Counts: Decodable {
+        let movies: Int?
+        let episodes: Int?
+    }
+
+    struct NotFound: Decodable {
+        let movies: [AnyEntry]?
+        let shows: [AnyEntry]?
+        let episodes: [AnyEntry]?
+    }
+
+    /// An unmatched item; only its presence matters.
+    struct AnyEntry: Decodable {}
+
+    let added: Counts?
+    let deleted: Counts?
+    let notFound: NotFound?
+
+    enum CodingKeys: String, CodingKey {
+        case added, deleted
+        case notFound = "not_found"
+    }
+
+    /// Movies plus episodes Trakt added or deleted.
+    var changedCount: Int {
+        let counts = added ?? deleted
+        return (counts?.movies ?? 0) + (counts?.episodes ?? 0)
+    }
+
+    var notFoundCount: Int {
+        (notFound?.movies?.count ?? 0) + (notFound?.shows?.count ?? 0) + (notFound?.episodes?.count ?? 0)
+    }
+}
 
 // MARK: - Watchlist
 

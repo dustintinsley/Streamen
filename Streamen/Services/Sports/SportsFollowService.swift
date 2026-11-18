@@ -196,9 +196,7 @@ final class SportsFollowService {
     func reload() {
         guard container != nil else { return }
         bootstrapPreFollowsIfNeeded()
-        // The screenshot demo (Debug builds) stands in for the follows while
-        // it's on, without writing any; the real ones return when it's off.
-        let loaded = SportsScreenshotDemo.isEnabled ? SportsScreenshotDemo.follows : fetchRows().map {
+        let loaded = fetchRows().map {
             SportsFollow(
                 key: $0.key,
                 kind: SportsFollowKind(rawValue: $0.kindRaw) ?? .team,

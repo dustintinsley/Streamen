@@ -44,9 +44,13 @@ import SwiftUI
         }
     }
 
-    /// The root list's About group: app identity plus a link to the credits /
-    /// licenses screen.
+    /// The root list's About group: app identity, TMDB's credit and the link to
+    /// Legal & Licenses.
     struct AboutSection: View {
+        /// Off in the Mac Settings window's About tab, which lists the
+        /// licences right under this group.
+        var showsLegalLink = true
+
         var body: some View {
             Section {
                 HStack(spacing: 12) {
@@ -73,6 +77,14 @@ import SwiftUI
                             Spacer(minLength: 8)
                             TMDBAttribution.logo(height: 12)
                         }
+                    }
+                }
+
+                if showsLegalLink {
+                    NavigationLink {
+                        LegalLicensesView()
+                    } label: {
+                        Label("Legal & Licenses", systemImage: "doc.text")
                     }
                 }
             } header: {

@@ -34,7 +34,7 @@
         /// The channel to land focus on — the one just watched, when Back from
         /// the player reopens this game.
         var focusChannelID: String?
-        var provider: any SportsDataProvider = SportsProviders.current
+        var provider: any SportsDataProvider = ESPNClient.shared
 
         @Environment(\.dismiss) private var dismiss
         @Environment(\.modelContext) private var modelContext

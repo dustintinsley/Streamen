@@ -148,7 +148,8 @@
                 }
             } else if tab == .about {
                 SettingsList {
-                    AboutSection()
+                    AboutSection(showsLegalLink: false)
+                    LegalLicensesSections()
                 }
             } else {
                 VStack(spacing: 0) {

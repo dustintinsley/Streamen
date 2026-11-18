@@ -14,7 +14,7 @@ import SwiftUI
 
 struct LeagueTeamsView: View {
     let league: SportsLeague
-    var provider: any SportsDataProvider = SportsProviders.current
+    var provider: any SportsDataProvider = ESPNClient.shared
 
     @State private var store = SportsStore.shared
     @State private var follows = SportsFollowService.shared

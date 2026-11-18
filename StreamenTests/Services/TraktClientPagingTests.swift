@@ -79,8 +79,7 @@ struct TraktClientPagingTests {
         config.protocolClasses = [TraktStubProtocol.self]
         return TraktClient(
             session: URLSession(configuration: config),
-            clientID: "test-client-id",
-            clientSecret: "test-client-secret"
+            clientID: "test-client-id"
         )
     }
 

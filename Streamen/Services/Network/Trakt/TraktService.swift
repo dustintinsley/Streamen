@@ -14,6 +14,7 @@
 //
 
 import Foundation
+import OSLog
 import SwiftData
 import SwiftUI
 
@@ -182,35 +183,82 @@ final class TraktService {
     /// the model never crosses an actor boundary. No-ops when not connected or
     /// the movie has no TMDB id.
     func syncWatched(movie: Movie, watched: Bool) {
-        guard isConnected, let tmdbID = movie.tmdbId else { return }
+        guard isConnected else { return }
+        guard let tmdbID = movie.tmdbId else {
+            Logger.network.notice("Trakt: skipped a movie with no TMDB id")
+            return
+        }
         let items = TraktSyncItems.movie(tmdbID: tmdbID)
-        syncHistory(items, add: watched)
+        syncHistory(items, add: watched, what: "movie tmdb:\(tmdbID)")
     }
 
     /// Syncs an episode's watched state to Trakt using its show's TMDB id plus
     /// the season/episode numbers.
     func syncWatched(episode: Episode, watched: Bool) {
-        guard isConnected, let showTMDBID = episode.series?.tmdbId else { return }
+        guard isConnected else { return }
+        guard let showTMDBID = episode.series?.tmdbId else {
+            Logger.network.notice("Trakt: skipped an episode whose series has no TMDB id")
+            return
+        }
         let items = TraktSyncItems.episode(
             showTMDBID: showTMDBID,
             season: episode.seasonNum,
             episode: episode.episodeNum
         )
-        syncHistory(items, add: watched)
+        syncHistory(
+            items,
+            add: watched,
+            what: "episode tmdb:\(showTMDBID) S\(episode.seasonNum)E\(episode.episodeNum)"
+        )
     }
 
-    private func syncHistory(_ items: TraktSyncItems, add: Bool) {
+    /// Best-effort: a failed sync never disrupts playback or the UI, but every
+    /// outcome is logged so a history that doesn't arrive can be traced.
+    private func syncHistory(_ items: TraktSyncItems, add: Bool, what: String) {
+        let verb = add ? "add" : "remove"
         Task { [weak self] in
-            guard let self, let accessToken = await validAccessToken() else { return }
+            guard let self else { return }
+            guard let accessToken = await validAccessToken() else {
+                Logger.network.warning("Trakt: \(verb, privacy: .public) \(what, privacy: .public) skipped, no valid token")
+                return
+            }
             do {
-                if add {
-                    try await client.addToHistory(items, accessToken: accessToken)
+                let result = add
+                    ? try await client.addToHistory(items, accessToken: accessToken)
+                    : try await client.removeFromHistory(items, accessToken: accessToken)
+                if result.notFoundCount > 0 {
+                    Logger.network.warning("Trakt: \(verb, privacy: .public) \(what, privacy: .public) not matched by Trakt")
                 } else {
-                    try await client.removeFromHistory(items, accessToken: accessToken)
+                    Logger.network.info("Trakt: \(verb, privacy: .public) \(what, privacy: .public) ok, \(result.changedCount) changed")
                 }
             } catch {
-                // Scrobbling is best-effort; a failed sync shouldn't disrupt
-                // playback or the UI.
+                Logger.network.error("Trakt: \(verb, privacy: .public) \(what, privacy: .public) failed: \(String(describing: error), privacy: .public)")
+            }
+        }
+    }
+
+    // MARK: - Scrobble
+
+    /// The scrobble in flight, so calls reach Trakt in the order they were
+    /// made: a quick start-then-pause must not land as pause-then-start.
+    @ObservationIgnored private var scrobbleChain: Task<Void, Never>?
+
+    /// Best-effort, like the watched sync; every outcome is logged.
+    func scrobble(_ action: TraktScrobbleAction, _ body: TraktScrobbleBody, what: String) {
+        guard isConnected else { return }
+        let previous = scrobbleChain
+        scrobbleChain = Task { [weak self] in
+            await previous?.value
+            guard let self, let accessToken = await validAccessToken() else { return }
+            let percent = Int(body.progress.rounded())
+            do {
+                try await client.scrobble(action, item: body, accessToken: accessToken)
+                Logger.network.info("Trakt scrobble: \(action.rawValue, privacy: .public) \(what, privacy: .public) at \(percent)%")
+            } catch TraktError.server(409) {
+                // Trakt already has this exact scrobble from moments ago.
+                Logger.network.info("Trakt scrobble: \(action.rawValue, privacy: .public) \(what, privacy: .public) already recorded")
+            } catch {
+                Logger.network.error("Trakt scrobble: \(action.rawValue, privacy: .public) \(what, privacy: .public) failed: \(String(describing: error), privacy: .public)")
             }
         }
     }

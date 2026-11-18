@@ -437,7 +437,6 @@ OPENSUBTITLES_API_KEY=your_opensubtitles_api_key
 
 # Trakt — watch scrobbling (device OAuth flow)
 TRAKT_CLIENT_ID=your_trakt_client_id
-TRAKT_CLIENT_SECRET=your_trakt_client_secret
 
 # Simkl — watch scrobbling (OAuth 2.0 device flow, AUTH V2)
 SIMKL_CLIENT_ID=your_simkl_client_id

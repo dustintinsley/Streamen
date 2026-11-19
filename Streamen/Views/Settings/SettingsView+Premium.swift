@@ -62,10 +62,13 @@ extension SettingsView {
 
 #if !os(tvOS)
 
-    /// The page behind the Streamen Pro row once Pro is unlocked: the plan, its
-    /// billing state, and what it includes. Free users get the paywall instead.
+    /// The Streamen Pro page: the plan, its billing state, and what it includes.
+    /// On iPhone and iPad a free user's row opens the paywall instead, but the Mac
+    /// Settings window always shows this page in its Streamen Pro tab, so the free
+    /// plan gets its own status and the upgrade / restore actions here.
     struct PremiumPlanView: View {
         @State private var premium = PremiumManager.shared
+        @State private var showPaywall = false
 
         var body: some View {
             SettingsList {
@@ -76,8 +79,12 @@ extension SettingsView {
                             .font(.title3)
                             .frame(width: 30)
                         VStack(alignment: .leading, spacing: 1) {
-                            Text(premium.planTitle)
-                            if let renewalDetail = premium.renewalDetail {
+                            Text(premium.isPremium ? premium.planTitle : String(localized: "Free Plan"))
+                            if !premium.isPremium {
+                                Text("Upgrade to unlock the features below")
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            } else if let renewalDetail = premium.renewalDetail {
                                 Text(renewalDetail)
                                     .font(.caption)
                                     .foregroundStyle(.secondary)
@@ -85,6 +92,20 @@ extension SettingsView {
                         }
                     }
                     .padding(.vertical, 2)
+
+                    if !premium.isPremium {
+                        Button {
+                            showPaywall = true
+                        } label: {
+                            Label("Upgrade to Pro", systemImage: "crown")
+                        }
+                        Button {
+                            Task { await premium.restore() }
+                        } label: {
+                            Label("Restore Purchases", systemImage: "arrow.clockwise")
+                        }
+                        .disabled(premium.isWorking)
+                    }
 
                     // Subscribers must always have a route to cancel; lifetime owners
                     // have nothing to manage, so they don't get this row.
@@ -108,10 +129,11 @@ extension SettingsView {
                         }
                     }
                 } header: {
-                    Text("Included")
+                    Text(premium.isPremium ? "Included" : "Pro Features")
                 }
             }
             .platformNavigationTitle("Streamen Pro")
+            .paywall(isPresented: $showPaywall)
         }
     }
 

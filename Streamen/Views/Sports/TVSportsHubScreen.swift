@@ -181,7 +181,9 @@
         }
 
         /// My Teams, then each followed league, as chips that scroll sideways
-        /// when there are more than fit.
+        /// when there are more than fit. The strip clips, so chips past its end
+        /// can't draw over the day switch beside it; the inset padding (undone
+        /// outside) leaves room for a focused chip's lift and shadow.
         private var scopeChips: some View {
             ScrollView(.horizontal, showsIndicators: false) {
                 HStack(spacing: 12) {
@@ -190,10 +192,28 @@
                         scopeChip(.league(league.id), title: league.name)
                     }
                 }
-                .padding(.vertical, 8)
+                .padding(.leading, Self.chipInset)
+                // The last chip scrolls clear of the fade.
+                .padding(.trailing, Self.chipFade)
+                .padding(.vertical, Self.chipInset + 8)
             }
-            .scrollClipDisabled()
+            .padding(.horizontal, -Self.chipInset)
+            .padding(.vertical, -Self.chipInset)
+            // Fades the strip out where it's cut off, so the clip reads as
+            // "more to the side" rather than a sliced chip.
+            .mask {
+                HStack(spacing: 0) {
+                    Color.black
+                    LinearGradient(colors: [.black, .clear], startPoint: .leading, endPoint: .trailing)
+                        .frame(width: Self.chipFade)
+                }
+            }
         }
+
+        /// Room around the chips for `TVCardButtonStyle`'s focus scale and shadow.
+        private static let chipInset: CGFloat = 20
+        /// Width of the fade at the strip's trailing edge.
+        private static let chipFade: CGFloat = 72
 
         private func scopeChip(_ value: SportsHubScope, title: String) -> some View {
             let isItemFocused = focus == .scope(value)

@@ -110,6 +110,7 @@ extension SettingsView {
                     // Subscribers must always have a route to cancel; lifetime owners
                     // have nothing to manage, so they don't get this row.
                     if premium.hasManageableSubscription {
+                        LifetimeUpgradeRow()
                         ManageSubscriptionRow()
                     }
                 }
@@ -279,9 +280,13 @@ extension SettingsView {
                     .buttonStyle(TVSettingsActionButtonStyle())
                 }
             } else if premium.hasManageableSubscription {
-                ManageSubscriptionRow()
-                    .frame(maxWidth: 620)
-                    .padding(.horizontal, TVSettingsMetrics.rowHPadding)
+                VStack(alignment: .trailing, spacing: 16) {
+                    LifetimeUpgradeRow()
+                        .frame(maxWidth: 620, alignment: .trailing)
+                    ManageSubscriptionRow()
+                        .frame(maxWidth: 620)
+                        .padding(.horizontal, TVSettingsMetrics.rowHPadding)
+                }
             }
         }
 

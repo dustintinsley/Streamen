@@ -11,9 +11,9 @@ struct LiveTVLayoutModeTests {
         #expect(LiveTVLayoutMode.storageKey == "streamen.liveTV.layoutMode")
     }
 
-    @Test func `tvOS defaults to the Guide, everything else to the List`() {
-        #expect(LiveTVLayoutMode.platformDefault(isTV: true) == .guide)
-        #expect(LiveTVLayoutMode.platformDefault(isTV: false) == .list)
+    @Test func `Apple TV and Mac default to the Guide, everything else to the List`() {
+        #expect(LiveTVLayoutMode.platformDefault(prefersGuide: true) == .guide)
+        #expect(LiveTVLayoutMode.platformDefault(prefersGuide: false) == .list)
     }
 
     @Test func `the iOS host resolves to the List default`() {

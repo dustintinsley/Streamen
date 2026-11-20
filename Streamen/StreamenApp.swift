@@ -537,6 +537,11 @@ struct StreamenApp: App {
         }
         .modelContainer(catalogContainer)
         #if os(macOS)
+            // First-ever size only: with none, the window opened at its content's
+            // small ideal size. 16:10 like Mac displays, and small enough for a
+            // 13-inch MacBook Air; after that the window reopens wherever the
+            // viewer last left it.
+            .defaultSize(width: 1280, height: 800)
             .commands {
                 GoMenuCommands()
                 PlaybackMenuCommands()

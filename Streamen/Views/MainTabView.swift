@@ -423,7 +423,22 @@ struct MainTabView: View {
                     }
                 }
             }
+            #if os(macOS)
+            // The Mac's toolbar tab bar reuses its items by position when tabs
+            // appear or disappear, so hiding a tab (Hide Empty Tabs, a hidden
+            // Series tab) left the search tab wearing the label of the tab that
+            // used to sit there — "Sports" — while still opening Search. A new
+            // identity for each set of visible tabs makes it rebuild its items.
+            .id(macTabBarIdentity(tabs))
+            #endif
         }
+
+        #if os(macOS)
+            private func macTabBarIdentity(_ tabs: Set<PlaylistTab>) -> String {
+                let shown = PlaylistTab.allCases.filter { tabs.showsTab($0.appTab) }.map(\.rawValue)
+                return (shown + (sportsTabEnabled ? ["sports"] : [])).joined(separator: ",")
+            }
+        #endif
     #endif
 
     // MARK: - Deep links

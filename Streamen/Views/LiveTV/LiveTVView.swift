@@ -29,14 +29,16 @@ nonisolated enum LiveTVLayoutMode: String, CaseIterable, Identifiable {
 
     static let storageKey = "streamen.liveTV.layoutMode"
 
-    static func platformDefault(isTV: Bool) -> LiveTVLayoutMode {
-        isTV ? .guide : .list
+    /// The Guide on the big screens with room for the timeline (Apple TV and
+    /// Mac), the List on iPhone, iPad and Vision Pro.
+    static func platformDefault(prefersGuide: Bool) -> LiveTVLayoutMode {
+        prefersGuide ? .guide : .list
     }
 
-    #if os(tvOS)
-        static let defaultMode = platformDefault(isTV: true)
+    #if os(tvOS) || os(macOS)
+        static let defaultMode = platformDefault(prefersGuide: true)
     #else
-        static let defaultMode = platformDefault(isTV: false)
+        static let defaultMode = platformDefault(prefersGuide: false)
     #endif
 
     /// Resolves the stored raw value; a missing or unknown one reads as the

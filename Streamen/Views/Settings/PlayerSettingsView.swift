@@ -23,6 +23,8 @@
         private var rotateToLandscape = PlayerSettings.Playback.rotateToLandscapeDefault
         @AppStorage(PlayerSettings.Playback.liveQualitySwitchKey)
         private var liveQualitySwitch = PlayerSettings.Playback.liveQualitySwitchDefault
+        @AppStorage(PlayerSettings.Playback.skipIntervalKey)
+        private var skipIntervalRaw = PlayerSkipInterval.platformDefault
         @AppStorage(PlayerSettings.StreamInfo.enabledKey)
         private var streamInfoEnabled = PlayerSettings.StreamInfo.enabledDefault
         @AppStorage(PlayerSettings.StreamInfo.detailLevelKey)
@@ -30,6 +32,10 @@
         @AppStorage(PlayerSettings.externalPlayerKey) private var externalPlayerRaw: String = ""
         @AppStorage(PlayerSettings.externalPlayerScopeKey)
         private var externalPlayerScopeRaw: String = ExternalPlayerScope.default.rawValue
+        #if os(macOS)
+            @AppStorage(PlayerSettings.macPlayerPresentationKey)
+            private var macPresentationRaw: String = MacPlayerPresentation.default.rawValue
+        #endif
         @State private var premium = PremiumManager.shared
         @State private var showPaywall = false
         @State private var openSubtitles = OpenSubtitlesService.shared
@@ -50,6 +56,15 @@
             #endif
         }
 
+        /// Snaps a stale or unknown stored value to the platform default, so
+        /// the menu always shows a selection.
+        private var skipIntervalSelection: Binding<Int> {
+            Binding(
+                get: { PlayerSkipInterval(seconds: skipIntervalRaw).seconds },
+                set: { skipIntervalRaw = $0 }
+            )
+        }
+
         /// iPhone only, like the lock itself — see `PlayerOrientationLock`.
         private var showsRotateToLandscape: Bool {
             #if os(iOS)
@@ -67,6 +82,12 @@
                     }
                     premiumToggle("Autoplay Next Episode", isOn: $autoPlayNext)
                     premiumToggle("Show Skip Intro Button", isOn: $showSkipIntroButton)
+                    Picker("Skip Interval", selection: skipIntervalSelection) {
+                        ForEach(PlayerSkipInterval.options, id: \.self) { seconds in
+                            Text(verbatim: PlayerSkipInterval(seconds: seconds).displayName).tag(seconds)
+                        }
+                    }
+                    .pickerStyle(.menu)
                 } header: {
                     Text("Playback")
                 } footer: {
@@ -75,8 +96,23 @@
                             Text("Turns your iPhone to landscape when a video starts, and back to portrait when the player closes.")
                         }
                         Text("Automatically start the next episode when one finishes.")
+                        Text("How far skip back and skip forward jump.")
                     }
                 }
+
+                #if os(macOS)
+                    Section {
+                        Picker("Open Videos In", selection: $macPresentationRaw) {
+                            Text("New Window").tag(MacPlayerPresentation.newWindow.rawValue)
+                            Text("Current Window").tag(MacPlayerPresentation.currentWindow.rawValue)
+                        }
+                        .pickerStyle(.menu)
+                    } header: {
+                        Text("Window")
+                    } footer: {
+                        Text("Play in a separate player window, or in the window you started from.")
+                    }
+                #endif
 
                 // Free, like the stream caption below.
                 Section {

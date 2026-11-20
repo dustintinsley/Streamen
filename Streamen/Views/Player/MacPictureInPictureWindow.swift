@@ -31,7 +31,7 @@ import SwiftUI
 
         func body(content: Content) -> some View {
             content
-                .background(PlayerWindowAccessor { host.window = $0 })
+                .background(MacWindowAccessor { host.window = $0 })
                 .onChange(of: isActive) { _, active in
                     if active { host.hide() } else { host.restore() }
                 }

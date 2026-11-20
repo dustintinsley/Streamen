@@ -42,7 +42,7 @@ nonisolated enum LiveTVLayoutMode: String, CaseIterable, Identifiable {
     #endif
 
     /// Resolves the stored raw value; a missing or unknown one reads as the
-    /// platform default, so a user who never picked follows it.
+    /// default, so a user who never picked follows it.
     init(storedValue: String?) {
         self = storedValue.flatMap(Self.init(rawValue:)) ?? Self.defaultMode
     }

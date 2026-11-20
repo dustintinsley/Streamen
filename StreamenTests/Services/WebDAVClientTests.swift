@@ -172,7 +172,7 @@ struct WebDAVClientTests {
         #expect(recorded.method == "PROPFIND")
         #expect(recorded.depth == "1")
         #expect(recorded.contentType == "application/xml; charset=utf-8")
-        #expect(recorded.authorization == "Basic YmlsaXBwOnRlc3Q=")
+        #expect(recorded.authorization == "Basic c3RyZWFtdXNlcjp0ZXN0")
         #expect(recorded.body?.contains("<D:resourcetype/>") == true)
         #expect(recorded.body?.contains("<D:getcontentlength/>") == true)
     }

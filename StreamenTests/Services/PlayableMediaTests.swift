@@ -389,7 +389,7 @@ struct PlayableMediaTests {
         #expect(media.url.absoluteString == "http://192.168.0.2:30035/Movies/The.Godfather.mkv")
         #expect(media.url.user == nil)
         #expect(media.url.password == nil)
-        #expect(media.httpHeaders == ["Authorization": "Basic YmlsaXBwOnRlc3Q="])
+        #expect(media.httpHeaders == ["Authorization": "Basic c3RyZWFtdXNlcjp0ZXN0"])
     }
 
     @Test func `webdav episode carries a basic auth header`() throws {
@@ -399,7 +399,7 @@ struct PlayableMediaTests {
         episode.directSource = "http://192.168.0.2:30035/Movies/Show.S01E01.mkv"
 
         let media = try #require(PlayableMedia.from(episode: episode, playlist: playlist))
-        #expect(media.httpHeaders == ["Authorization": "Basic YmlsaXBwOnRlc3Q="])
+        #expect(media.httpHeaders == ["Authorization": "Basic c3RyZWFtdXNlcjp0ZXN0"])
     }
 
     @Test func `non webdav playlist yields no headers`() throws {

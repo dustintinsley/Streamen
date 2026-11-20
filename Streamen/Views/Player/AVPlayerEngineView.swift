@@ -109,9 +109,6 @@ struct AVPlayerEngineView: View {
     #if os(iOS)
         @State private var reflectionSource = AVPlayerFrameSource()
     #endif
-    #if os(macOS)
-        @Environment(\.dismissWindow) private var dismissWindow
-    #endif
 
     private let autoHideInterval: TimeInterval = 4
     /// How long to wait for playback before declaring a stream dead when this is
@@ -451,10 +448,7 @@ struct AVPlayerEngineView: View {
 
     private func closePlayer() {
         #if os(macOS)
-            if let window = NSApp.keyWindow, window.styleMask.contains(.fullScreen) {
-                window.toggleFullScreen(nil)
-            }
-            dismissWindow(id: "player")
+            MacPlayerWindowRouter.shared.closePlayer()
         #else
             dismiss.dismissPlayer()
         #endif

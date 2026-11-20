@@ -330,7 +330,7 @@ struct JellyfinClientTests {
 
     @Test func `a basic header is not mistaken for a jellyfin token`() throws {
         let url = try #require(URL(string: "http://example.com/f.mkv"))
-        let headers = ["Authorization": "Basic YmlsaXBwOnRlc3Q="]
+        let headers = ["Authorization": "Basic c3RyZWFtdXNlcjp0ZXN0"]
         #expect(JellyfinPlaybackAuth.token(from: headers) == nil)
         #expect(JellyfinPlaybackAuth.authenticatedURL(url, headers: headers) == nil)
         #expect(JellyfinPlaybackAuth.authenticatedURL(url, headers: nil) == nil)

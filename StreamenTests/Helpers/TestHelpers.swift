@@ -134,7 +134,12 @@ struct StringCatalog {
     }
 
     static func localizable(filePath: String = #filePath) throws -> Self {
-        let url = repoRootURL(filePath: filePath).appendingPathComponent("Streamen/Localizable.xcstrings")
+        try table("Localizable", filePath: filePath)
+    }
+
+    /// One of the app's String Catalogs, by table name.
+    static func table(_ name: String, filePath: String = #filePath) throws -> Self {
+        let url = repoRootURL(filePath: filePath).appendingPathComponent("Streamen/\(name).xcstrings")
         let root = try JSONSerialization.jsonObject(with: Data(contentsOf: url)) as? [String: Any]
         return Self(
             sourceLanguage: root?["sourceLanguage"] as? String ?? "en",
@@ -149,17 +154,25 @@ struct StringCatalog {
         let localizations = entry["localizations"] as? [String: Any] ?? [:]
         var resolved: [String: String] = [:]
         for (language, value) in localizations where language != sourceLanguage {
-            let unit = (value as? [String: Any])?["stringUnit"] as? [String: Any]
-            resolved[language] = unit?["value"] as? String ?? ""
+            resolved[language] = displayUnit(value)?["value"] as? String ?? ""
         }
         return resolved
     }
 }
 
+/// A localization's string unit, or for a plural variation its `other` form,
+/// which every language has and which carries the same format arguments.
+func displayUnit(_ value: Any?) -> [String: Any]? {
+    let localization = value as? [String: Any]
+    if let unit = localization?["stringUnit"] as? [String: Any] { return unit }
+    let plural = (localization?["variations"] as? [String: Any])?["plural"] as? [String: Any]
+    return (plural?["other"] as? [String: Any])?["stringUnit"] as? [String: Any]
+}
+
 /// The locales Streamen ships. `en` is the catalog's source language and carries no
 /// `stringUnit` of its own for all but a handful of entries, so its value is the
 /// key itself.
-let shippingLocales: Set<String> = ["ar", "en", "de", "es", "fr", "it", "ja", "ko", "pt", "zh-Hans"]
+let shippingLocales: Set<String> = ["ar", "en", "de", "es", "fr", "it", "ja", "ko", "nl", "pl", "pt", "ru", "tr", "zh-Hans"]
 
 extension StringCatalog {
     /// Every key in the catalog.
@@ -186,7 +199,7 @@ extension StringCatalog {
         let localizations = entry["localizations"] as? [String: Any] ?? [:]
         var languages: Set<String> = [sourceLanguage]
         for (language, value) in localizations {
-            guard let unit = (value as? [String: Any])?["stringUnit"] as? [String: Any],
+            guard let unit = displayUnit(value),
                   unit["state"] as? String == "translated",
                   let text = unit["value"] as? String, !text.isEmpty
             else { continue }

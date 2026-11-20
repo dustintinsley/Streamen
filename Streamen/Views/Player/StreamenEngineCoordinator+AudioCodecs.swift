@@ -2,7 +2,8 @@
 //  StreamenEngineCoordinator+AudioCodecs.swift
 //  Streamen
 //
-//  The audio codecs of the open stream, which the track menu doesn't show.
+//  The audio codecs of the open stream, which the track menu doesn't show,
+//  and the channel count the playing track asks the audio session for.
 //  Split out of StreamenEngineCoordinator to keep that file within the
 //  project's size limit.
 //
@@ -23,5 +24,13 @@ extension StreamenEngineCoordinator {
         guard codecs != loggedAudioCodecs else { return }
         loggedAudioCodecs = codecs
         Logger.player.notice("StreamenEngine audio tracks: \(codecs, privacy: .public)")
+    }
+
+    /// Asks the audio session for the playing track's channel count; the
+    /// engine then hands the renderer whatever width was granted. A Multiview
+    /// tile or guide preview leaves the session's width alone.
+    func preferAudioChannels(of track: TrackInfo?) {
+        guard !isEmbedded else { return }
+        PlayerAudioChannelPreference.apply(sourceChannels: track?.audio?.channels)
     }
 }

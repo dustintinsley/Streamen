@@ -244,6 +244,11 @@ enum PlayerSettings {
         PlayerVolumeMath.clamped(defaults.float(volumeKey, default: volumeDefault))
     }
 
+    /// Where a stream opens on macOS: a player window of its own (the
+    /// default) or the library window it was started from. Device-local. See
+    /// `MacPlayerPresentation`.
+    nonisolated static let macPlayerPresentationKey = "player.macPresentation"
+
     // MARK: - Playback behaviour
 
     /// Engine-independent playback preferences for episodic content. Both default
@@ -272,6 +277,10 @@ enum PlayerSettings {
         /// Offer the same live channel in its other qualities (HD, FHD, 4K …)
         /// from the player when the playlist lists several. Device-local.
         static let liveQualitySwitchKey = "player.liveQualitySwitch"
+        /// Seconds skip back / skip forward jump, one of
+        /// `PlayerSkipInterval.options`. Device-local; unset means the
+        /// platform default (`PlayerSkipInterval.platformDefault`).
+        nonisolated static let skipIntervalKey = "player.skipInterval"
 
         static let autoPlayNextDefault = true
         static let showNextEpisodeButtonDefault = true

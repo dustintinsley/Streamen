@@ -139,6 +139,10 @@ struct MainTabView: View {
         let scope = catalogScope
         let tabs = visibleTabs(in: scope)
         return tabView(selection: $router.selectedTab, tabs: tabs)
+        #if os(macOS)
+            // Innermost, so the player it shows inherits everything below.
+            .macInlinePlayerHost()
+        #endif
         #if os(tvOS)
             .disabled(blockingOverlayOwnsScreen || router.isQuickSwitchPresented)
             // Attached OUTSIDE `.disabled` so the same button closes the modal it

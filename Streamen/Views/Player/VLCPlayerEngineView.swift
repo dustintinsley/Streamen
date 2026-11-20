@@ -118,9 +118,6 @@ struct VLCPlayerEngineView: View {
     @Environment(\.scenePhase) private var scenePhase
     /// The player page this engine runs in, for `PlayerPipParking`.
     @Environment(\.playerPageID) private var pageID
-    #if os(macOS)
-        @Environment(\.dismissWindow) private var dismissWindow
-    #endif
 
     private let autoHideInterval: TimeInterval = 4
     /// How long to wait for the first frame before declaring a stream dead when
@@ -476,10 +473,7 @@ struct VLCPlayerEngineView: View {
 
     private func closePlayer() {
         #if os(macOS)
-            if let window = NSApp.keyWindow, window.styleMask.contains(.fullScreen) {
-                window.toggleFullScreen(nil)
-            }
-            dismissWindow(id: "player")
+            MacPlayerWindowRouter.shared.closePlayer()
         #else
             dismiss.dismissPlayer()
         #endif

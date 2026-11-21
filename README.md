@@ -591,7 +591,7 @@ modified version of Streamen as a network service, you must make your modified s
 available to its users.
 
 ```
-Copyright (C) 2026 Philipp Bischoff
+Copyright (C) 2026 Streamen contributors
 
 This program is free software: you can redistribute it and/or modify it under the
 terms of the GNU Affero General Public License as published by the Free Software

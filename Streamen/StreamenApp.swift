@@ -2,8 +2,6 @@
 //  StreamenApp.swift
 //  Streamen
 //
-//  Created by Philipp Bischoff on 09.04.26.
-//
 
 import OSLog
 import SwiftData

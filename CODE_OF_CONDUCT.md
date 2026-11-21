@@ -61,8 +61,8 @@ representative at an online or offline event.
 ## Enforcement
 
 Instances of abusive, harassing, or otherwise unacceptable behavior may be
-reported to the community leaders responsible for enforcement at
-**p.bischoff@innoloft.com**.
+reported to the project maintainer through GitHub at
+**https://github.com/dustintinsley**.
 
 All complaints will be reviewed and investigated promptly and fairly.
 

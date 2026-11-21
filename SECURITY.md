@@ -6,11 +6,10 @@ If you discover a security vulnerability in Streamen, please report it **private
 do not open a public issue, pull request, or discussion, as that may put users at
 risk before a fix is available.
 
-Use one of the following:
+Report it privately through a GitHub private advisory:
 
-- **GitHub private advisory** (preferred): open a report at
+- open a report at
   <https://github.com/dustintinsley/Streamen/security/advisories/new>
-- **Email**: p.bischoff@innoloft.com
 
 Please include, as far as you can:
 
